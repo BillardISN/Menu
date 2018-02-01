@@ -35,7 +35,6 @@ def Règlement():
 def Américain():
     fen.destroy()
     Billard_Americain()
-    son.stop()
 
 def Billard_Français():
     fen.destroy()
