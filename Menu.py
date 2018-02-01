@@ -71,7 +71,6 @@ def Billard_Americain():
 def Retour():
     fen.destroy()
     menu()
-    son.stop()
 
 def Quitter():
     fen.destroy()
