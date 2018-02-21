@@ -1,0 +1,209 @@
+
+H=500
+L=1000
+##le personnage
+class Personnage():
+
+    def __init__(self):
+        self.x=100
+        self.y=350
+        self.vx=20
+        self.vy=0
+        self.ax=0
+        self.ay=9
+        self.dt=0.1
+        self.rayon=20
+
+        self.mur=False
+        self.debout=False
+
+    def evoluer(self):
+        self.vx=self.vx+self.ax*self.dt
+        self.vy=self.vy+self.ay*self.dt
+        self.x=self.x+self.vx*self.dt
+        self.y=self.y+self.vy*self.dt
+
+
+    def afficher(self):
+        print("(x,y): "+str(self.x)+","+str(self.y)+"  vx,vy: "+str(self.vx)+","+str(self.vy))
+
+    def collision(self,obs):
+        haut=(self.y+self.rayon<obs.y)
+        bas=(self.y-self.rayon>obs.y+obs.ly)
+        gauche=(self.x+self.rayon<obs.x)
+        droite=(self.x-self.rayon>obs.x+obs.lx)
+        collision=not(haut or bas or gauche or droite)
+        return collision
+
+
+##un obstacle est betement un carre
+class Obstacle():
+
+    def __init__(self,dx,dy,dx1,dy1,mechant):
+        self.x=dx
+        self.y=dy
+        self.lx=dx1
+        self.ly=dy1
+        self.mechant=mechant
+
+
+##un jeu est un personnage et des obstacles
+class Jeu():
+
+    def __init__(self):
+        self.pj=Personnage()
+        self.obstacles=[]
+        self.obstacles+=[Obstacle(20,20,0,H-20,False)]
+        self.obstacles+=[Obstacle(20,20,L-20,0,False)]
+        self.obstacles+=[Obstacle(L-20,20,L-20,H-20,False)]
+        self.obstacles+=[Obstacle(20,H-20,L-20,H-20,False)]
+##        self.obstacles+=[Obstacle(50,400,400,50,False)]
+##        self.obstacles+=[Obstacle(0,0,50,450,False)]
+##        self.obstacles+=[Obstacle(450,0,50,450,False)]
+##        self.obstacles+=[Obstacle(100,300,200,10,False)]
+##        self.obstacles+=[Obstacle(200,180,10,70,False)]
+##        self.obstacles+=[Obstacle(250,180,10,70,False)]
+##        self.obstacles+=[Obstacle(250,179,100,10,False)]
+##        self.obstacles+=[Obstacle(150,150,20,20,True)]
+
+
+    def evoluer(self):
+        global done
+
+
+        ##deplace
+        self.pj.debout=False
+
+        ##deplace le pj
+        self.pj.evoluer()
+
+        ##test collision
+        collision=False
+        res=[]
+        for obs in self.obstacles:
+
+            if (self.pj.collision(obs)):
+                ##si l'obstacle est mechant
+                if (obs.mechant):
+                    self.pj=Personnage()
+                else:
+                    pj=self.pj
+                    if(pj.y<obs.y)and(pj.y+pj.rayon>=obs.y)and (pj.vy>0):
+                        ##obstacle en bas
+                        pj.vy=0
+                        pj.y=obs.y-pj.rayon
+                        ##le personnage est debout
+                        pj.debout=True
+                    else:
+                        if(pj.y>obs.y+obs.ly)and(pj.y-pj.rayon<=obs.y+obs.ly):
+                            ##obstacle en haut
+                            self.pj.vy=-self.pj.vy
+                        else:
+                            if(self.pj.x<obs.x):
+                                ##obstacle a droite
+                                self.pj.vx=-self.pj.vx
+                            if(self.pj.x>obs.x+obs.lx):
+                                ##obstacle en gauche
+                                self.pj.vx=-self.pj.vx
+
+        ## --- gestion des evenements
+        for event in pygame.event.get():
+            ##joueur quitte
+            if event.type == pygame.QUIT:
+                done = True
+
+            ##personnage saute
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    self.pj.vy=-50
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    self.pj.vy=50
+
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.pj.vx=20
+
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                   self.pj.vx=-20
+
+    def dessiner(self):
+        WHITE = (0xFF, 0xFF, 0xFF)
+        RED = (0xFF, 0x00, 0x00)
+        BLUE = (0x00, 0x00, 0xFF)
+        BLACK = (0x00, 0x00, 0x00)
+        GREEN = (0x3A, 0x9D, 0x23)
+        BRUN = (0x4E, 0x3D, 0x28)
+        screen.fill(BRUN)
+
+        ##dessin obstacle
+        pygame.draw.rect(screen,GREEN,(20,20,L-40,H-40))
+        pygame.draw.line(screen,WHITE,(L*(3/4),20),(L*(3/4),H-20))
+        pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*math.pi),(1/2*math.pi))
+        def DN(Y):
+            D=25
+            X=20
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+            X=L-20
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+            X=(L/2)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+        DN(20)
+        DN(480)
+        for obs in self.obstacles:
+            if (obs.mechant):
+                coul=RED
+            else:
+                coul=BLACK
+##            pygame.draw.rect(screen,coul,(obs.x,obs.y,obs.lx,obs.ly))
+
+        ##dessin personnage
+        collision=False
+        res=[]
+        for obs in self.obstacles:
+            res=self.pj.collision(obs)
+            if (res):
+                collision=True
+
+        rayon=self.pj.rayon
+        pygame.draw.circle(screen,WHITE,(int(self.pj.x),int(self.pj.y)),rayon)
+
+
+
+from math import *
+import math
+import pygame
+pygame.init()
+size = (L,H)
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Titre")
+
+
+##boolean boucle
+done = False
+##creation du jeu
+jeu=Jeu()
+
+##gestion horloge
+clock = pygame.time.Clock()
+## -------- boucle principale
+while not done:
+
+
+
+    ## --- evolution du jeu
+    jeu.evoluer()
+
+    ## --- affichage
+    jeu.dessiner()
+
+    ## --- mise a jour graphique
+    pygame.display.flip()
+    ## --- attente
+    clock.tick(60)
+
+pygame.quit()
