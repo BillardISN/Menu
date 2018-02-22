@@ -188,6 +188,10 @@ done = False
 ##creation du jeu
 jeu=Jeu()
 
+##Musique en jeu
+music = pygame.mixer.music.load("BirdBrainz_II.wav")
+pygame.mixer.music.play()
+
 ##gestion horloge
 clock = pygame.time.Clock()
 ## -------- boucle principale
