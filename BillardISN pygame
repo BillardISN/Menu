@@ -4,15 +4,15 @@ L=1000
 ##le personnage
 class Personnage():
 
-    def __init__(self):
-        self.x=100
-        self.y=350
-        self.vx=20
-        self.vy=0
-        self.ax=0
-        self.ay=9
+    def __init__(self,x,y,vx,vy,ax,ay):
+        self.x=x
+        self.y=y
+        self.vx=vx
+        self.vy=vy
+        self.ax=ax
+        self.ay=ay
         self.dt=0.1
-        self.rayon=20
+        self.rayon=15
 
         self.mur=False
         self.debout=False
@@ -35,6 +35,10 @@ class Personnage():
         collision=not(haut or bas or gauche or droite)
         return collision
 
+    def contact(self,obs):
+        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<25)
+        return contact
+
 
 ##un obstacle est betement un carre
 class Obstacle():
@@ -46,17 +50,38 @@ class Obstacle():
         self.ly=dy1
         self.mechant=mechant
 
+class Cercle():
+
+    def __init__(self,dx,dy,mechant):
+        self.x=dx
+        self.y=dy
+        self.mechant=mechant
 
 ##un jeu est un personnage et des obstacles
 class Jeu():
 
     def __init__(self):
-        self.pj=Personnage()
+        self.pj=Personnage(350,100,20,0,0,0)
+        self.br=Personnage(400,400,0,0,0,0)
+        self.j=Personnage(700,400,0,0,0,0)
+        self.Liste=[self.pj,self.br,self.j]
         self.obstacles=[]
-        self.obstacles+=[Obstacle(20,20,0,H-20,False)]
-        self.obstacles+=[Obstacle(20,20,L-20,0,False)]
-        self.obstacles+=[Obstacle(L-20,20,L-20,H-20,False)]
-        self.obstacles+=[Obstacle(20,H-20,L-20,H-20,False)]
+        self.obstacles+=[Obstacle(30,60,0,H-120,False)]
+        self.obstacles+=[Obstacle(L-30,60,L-30,H-120,False)]
+##        self.obstacles+=[Obstacle(60,30,L-120,0,False)]
+        self.obstacles+=[Obstacle(60,30,((L-120)/2)-35,0,False)]
+        self.obstacles+=[Obstacle((L/2)+35,30,((L-120)/2)-35,0,False)]
+##        self.obstacles+=[Obstacle(60,H-30,L-120,H-30,False)]
+        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-35,H-30,False)]
+        self.obstacles+=[Obstacle((L/2)+35,H-30,((L-120)/2)-35,H-30,False)]
+        self.troue=[]
+        self.troue+=[Cercle(25,20,True)]
+        self.troue+=[Cercle(L/2,20,True)]
+        self.troue+=[Cercle(975,20,True)]
+        self.troue+=[Cercle(25,475,True)]
+        self.troue+=[Cercle(L/2,475,True)]
+        self.troue+=[Cercle(975,475,True)]
+
 ##        self.obstacles+=[Obstacle(50,400,400,50,False)]
 ##        self.obstacles+=[Obstacle(0,0,50,450,False)]
 ##        self.obstacles+=[Obstacle(450,0,50,450,False)]
@@ -69,42 +94,133 @@ class Jeu():
 
     def evoluer(self):
         global done
-
+##        Liste=[self.pj,self.br,self.j]
 
         ##deplace
         self.pj.debout=False
 
         ##deplace le pj
         self.pj.evoluer()
+        self.br.evoluer()
+        self.j.evoluer()
 
         ##test collision
         collision=False
         res=[]
-        for obs in self.obstacles:
+        verification=[0]
 
-            if (self.pj.collision(obs)):
-                ##si l'obstacle est mechant
-                if (obs.mechant):
-                    self.pj=Personnage()
-                else:
-                    pj=self.pj
-                    if(pj.y<obs.y)and(pj.y+pj.rayon>=obs.y)and (pj.vy>0):
-                        ##obstacle en bas
-                        pj.vy=0
-                        pj.y=obs.y-pj.rayon
-                        ##le personnage est debout
-                        pj.debout=True
+        for balle in self.Liste:
+            for obs in self.obstacles:
+
+                if (balle.collision(obs)):
+                    ##si l'obstacle est mechant
+                    if (obs.mechant):
+                        balle=Personnage()
                     else:
-                        if(pj.y>obs.y+obs.ly)and(pj.y-pj.rayon<=obs.y+obs.ly):
-                            ##obstacle en haut
-                            self.pj.vy=-self.pj.vy
+                        if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y)and (balle.vy>0):
+                            ##obstacle en bas
+                            balle.vy=-balle.vy
+                            balle.y=obs.y-balle.rayon
+                            ##le personnage est debout
+                            balle.debout=True
                         else:
-                            if(self.pj.x<obs.x):
-                                ##obstacle a droite
-                                self.pj.vx=-self.pj.vx
-                            if(self.pj.x>obs.x+obs.lx):
-                                ##obstacle en gauche
-                                self.pj.vx=-self.pj.vx
+                            if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
+                                ##obstacle en haut
+                                balle.vy=-balle.vy
+                            else:
+                                if(balle.x<obs.x):
+                                    ##obstacle a droite
+                                    balle.vx=-balle.vx
+                                if(balle.x>obs.x+obs.lx):
+                                    ##obstacle en gauche
+                                    balle.vx=-balle.vx
+
+            ##détection de la collision
+            Ok=1
+            for obs in self.troue:
+                if (balle.contact(obs))==False:
+                    if (obs.mechant):
+                        balle.x=obs.x
+                        balle.y=obs.y
+                        balle.rayon=balle.rayon-1
+            if balle.vx!=0 and balle.vy!=0:
+                for balle2 in self.Liste:
+                    condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
+                    if balle.x!=balle2.x and balle.y!=balle2.y:
+                        for verifier in range(len(verification)):
+                            if condition==verification[verifier]:
+                                Ok=0
+                        conditioncolision=(condition<=balle.rayon+balle2.rayon)
+                        ##Calcul des variables après la collision
+                        if conditioncolision and Ok==1:
+                            verification+=[condition]
+                            X=balle.x
+                            Y=balle.y
+                            XR=balle2.x
+                            YR=balle2.y
+                            DX=balle.vx
+                            DY=balle.vy
+                            DXR=balle2.vx
+                            DYR=balle2.vy
+                            RAYON=15
+                            ##Calcul lorsque les balles bougent
+                            if (DX!=0 or DY!=0) and (DYR!=0 or DXR!=0):
+                                angle1=Al_Kashi(X,X-DX,Y,Y-DY,X,X-DX,Y,Y,X-DX,X-DX,Y-DY,Y)
+                                angle2=Al_Kashi(XR,XR-DXR,YR,YR-DYR,XR,XR-DXR,YR,YR,XR-DXR,XR-DXR,YR-DYR,YR)
+                                v1=sqrt((DX**2)+((DY)**2))
+                                v2=sqrt((DXR**2)+((DYR)**2))
+                                angle1_2=atan((v2/v1)*(sin(angle2)/cos(angle1)))
+                                angle2_2=atan((v1/v2)*(sin(angle1)/cos(angle2)))
+                                v1_2=sqrt(((v2*sin(angle2))**2)+((v1*cos(angle1))**2))
+                                v2_2=sqrt(((v1*sin(angle1))**2)+((v2*cos(angle2))**2))
+                                DX=v1_2*cos(angle1_2)
+                                DY=v1_2*sin(angle1_2)
+                                DXR=v2_2*cos(angle2_2)
+                                DYR=v2_2*sin(angle2_2)
+                                if X-XR<0:
+                                    DX=-DX
+                                if Y-YR<0:
+                                    DY=-DY
+                                if XR-X<0:
+                                    DXR=-DXR
+                                if YR-Y<0:
+                                    DYR=-DYR
+                            ##Calcul lorsque une balle bouge
+                            else:
+                                m=(DY/DX)
+                                p=Y-(m*X)
+                                c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
+                                a=1+(m**2)
+                                b=2*((m*(p-YR))-XR)
+                                solution1=(((-b-(sqrt((b**2)-(4*c*a)))))/(2*a))
+                                solution2=(((-b+(sqrt((b**2)-(4*c*a)))))/(2*a))
+                                if DX<0:
+                                    X=solution2
+                                if DX>0:
+                                    X=solution1
+                                Y=(m*X)+p
+
+                                F=Al_Kashi(X,(X+DX),Y,(Y+DY),X,XR,Y,YR,XR,(X+DX),YR,(Y+DY))
+                                VitesseD=sqrt((DX**2) +(DY**2))
+                                angleV2=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                DXR=VitesseD*cos(F)*cos(angleV2)
+                                DYR=VitesseD*cos(F)*sin(angleV2)
+                                if XR-X<0:
+                                    DXR=-DXR
+                                if YR-Y<0:
+                                    DYR=-DYR
+                                DX=(DX-DXR)
+                                DY=(DY-DYR)
+                                balle.x=X
+                                balle.y=Y
+                            balle2.x=XR
+                            balle2.y=YR
+                            balle.vx=DX
+                            balle.vy=DY
+                            balle2.vx=DXR
+                            balle2.vy=DYR
+
+
 
         ## --- gestion des evenements
         for event in pygame.event.get():
@@ -137,7 +253,9 @@ class Jeu():
         BLUE = (0x00, 0x00, 0xFF)
         BLACK = (0x00, 0x00, 0x00)
         GREEN = (0x3A, 0x9D, 0x23)
+        GREENH = (0x1B, 0x4F, 0x08)
         BRUN = (0x74, 0x35, 0x03)
+##        Liste=[self.pj,self.br,self.j]
         screen.fill(BRUN)
 
         ##dessin obstacle
@@ -146,20 +264,25 @@ class Jeu():
         pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*math.pi),(1/2*math.pi))
         def DN(Y):
             D=25
-            X=20
+            X=25
             pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
-            X=L-20
+            X=975
             pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
-            X=(L/2)
+            X=L/2
             pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
-        DN(20)
-        DN(480)
-        for obs in self.obstacles:
-            if (obs.mechant):
-                coul=RED
-            else:
-                coul=BLACK
-##            pygame.draw.rect(screen,coul,(obs.x,obs.y,obs.lx,obs.ly))
+        def Bord(D,X1,X2):
+            pygame.draw.polygon(screen,GREENH,((X1,D),(X2,D+20),(X2,H-D-20),(X1,H-D)))
+        def Bord2(D,X1,X2):
+            pygame.draw.polygon(screen,GREENH,((D,X1),(D+20,X2),(L/2-(D/2)-20,X2),(L/2-(D/2),X1)))
+            pygame.draw.polygon(screen,GREENH,((L-D,X1),(L-D-20,X2),(L/2+(D/2)+20,X2),(L/2+(D/2),X1)))
+
+        D=50
+        Bord(D,20,30)
+        Bord(D,L-20,L-30)
+        Bord2(D,20,30)
+        Bord2(D,H-20,H-30)
+        DN(25)
+        DN(475)
 
         ##dessin personnage
         collision=False
@@ -168,10 +291,24 @@ class Jeu():
             res=self.pj.collision(obs)
             if (res):
                 collision=True
+        for balle in self.Liste:
+            rayon=balle.rayon
 
-        rayon=self.pj.rayon
-        pygame.draw.circle(screen,WHITE,(int(self.pj.x),int(self.pj.y)),rayon)
-
+            if rayon>1:
+                pygame.draw.circle(screen,WHITE,(int(balle.x),int(balle.y)),rayon)
+def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
+    ##Calcul d'un angle à partir de 3 points
+    fA = sqrt((Xa1-Xa2)**2 + (Ya1-Ya2)**2)
+    fB = sqrt((Xb1-Xb2)**2 + (Yb1-Yb2)**2)
+    fC = sqrt((Xc1-Xc2)**2 + (Yc1-Yc2)**2)
+    if fA==0:
+        fA=1/100
+    if fB==0:
+        fB=1/100
+    E=((fA**2) + (fB**2) - (fC**2)) / (2*fA*fB)
+    E=(int(E*100))/100
+    QS=acos(E)
+    return QS
 
 
 from math import *
@@ -180,7 +317,7 @@ import pygame
 pygame.init()
 size = (L,H)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Titre")
+pygame.display.set_caption("Jeu de 8")
 
 
 ##boolean boucle
