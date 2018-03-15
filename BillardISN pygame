@@ -1,4 +1,3 @@
-
 H=500
 L=1000
 ##le personnage
@@ -62,9 +61,22 @@ class Jeu():
 
     def __init__(self):
         self.pj=Personnage(350,100,20,0,0,0)
-        self.br=Personnage(400,400,0,0,0,0)
-        self.j=Personnage(700,400,0,0,0,0)
-        self.Liste=[self.pj,self.br,self.j]
+        self.ba=Personnage(400,400,0,0,0,0)
+        self.bb=Personnage(700,400,0,0,0,0)
+        self.bc=Personnage(300,300,0,0,0,0)
+        self.bd=Personnage(200,300,0,0,0,0)
+        self.be=Personnage(100,300,0,0,0,0)
+        self.bf=Personnage(200,200,0,0,0,0)
+        self.bg=Personnage(200,100,0,0,0,0)
+        self.bh=Personnage(600,300,0,0,0,0)
+        self.bi=Personnage(600,100,0,0,0,0)
+        self.bj=Personnage(500,400,0,0,0,0)
+        self.bk=Personnage(100,300,0,0,0,0)
+        self.bl=Personnage(100,200,0,0,0,0)
+        self.bm=Personnage(100,100,0,0,0,0)
+        self.bn=Personnage(400,300,0,0,0,0)
+        self.bo=Personnage(400,100,0,0,0,0)
+        self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
         self.obstacles+=[Obstacle(30,60,0,H-120,False)]
         self.obstacles+=[Obstacle(L-30,60,L-30,H-120,False)]
@@ -101,8 +113,21 @@ class Jeu():
 
         ##deplace le pj
         self.pj.evoluer()
-        self.br.evoluer()
-        self.j.evoluer()
+        self.ba.evoluer()
+        self.bb.evoluer()
+        self.bc.evoluer()
+        self.bd.evoluer()
+        self.be.evoluer()
+        self.bf.evoluer()
+        self.bg.evoluer()
+        self.bh.evoluer()
+        self.bi.evoluer()
+        self.bj.evoluer()
+        self.bk.evoluer()
+        self.bl.evoluer()
+        self.bm.evoluer()
+        self.bn.evoluer()
+        self.bo.evoluer()
 
         ##test collision
         collision=False
@@ -211,8 +236,8 @@ class Jeu():
                                     DYR=-DYR
                                 DX=(DX-DXR)
                                 DY=(DY-DYR)
-                                balle.x=X
-                                balle.y=Y
+                            balle.x=X
+                            balle.y=Y
                             balle2.x=XR
                             balle2.y=YR
                             balle.vx=DX
@@ -249,12 +274,14 @@ class Jeu():
 
     def dessiner(self):
         WHITE = (0xFF, 0xFF, 0xFF)
-        RED = (0xFF, 0x00, 0x00)
+        RED = (0xFD, 0x01, 0x01)
         BLUE = (0x00, 0x00, 0xFF)
         BLACK = (0x00, 0x00, 0x00)
         GREEN = (0x3A, 0x9D, 0x23)
         GREENH = (0x1B, 0x4F, 0x08)
         BRUN = (0x74, 0x35, 0x03)
+        YELLOW = (0xFE, 0xFE,0x01)
+
 ##        Liste=[self.pj,self.br,self.j]
         screen.fill(BRUN)
 
@@ -293,7 +320,6 @@ class Jeu():
                 collision=True
         for balle in self.Liste:
             rayon=balle.rayon
-
             if rayon>1:
                 pygame.draw.circle(screen,WHITE,(int(balle.x),int(balle.y)),rayon)
 def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
@@ -326,8 +352,8 @@ done = False
 jeu=Jeu()
 
 ##Musique en jeu
-music = pygame.mixer.music.load("BirdBrainz_II.wav")
-pygame.mixer.music.play()
+##music = pygame.mixer.music.load("BirdBrainz_II.wav")
+##pygame.mixer.music.play()
 
 ##gestion horloge
 clock = pygame.time.Clock()
