@@ -178,7 +178,6 @@ class Jeu():
                         conditioncolision=(condition<=balle.rayon+balle2.rayon)
                         ##Calcul des variables après la collision
                         if conditioncolision and Ok==1:
-                            verification+=[condition]
                             X=balle.x
                             Y=balle.y
                             XR=balle2.x
@@ -244,6 +243,7 @@ class Jeu():
                             balle.vy=DY
                             balle2.vx=DXR
                             balle2.vy=DYR
+                            verification+=[condition]
 
 
 
