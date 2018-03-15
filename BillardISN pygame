@@ -3,11 +3,14 @@ L=1000
 ##le personnage
 class Personnage():
 
-    def __init__(self,x,y,vx,vy,ax,ay):
+    def __init__(self,x,y,v,angle,ax,ay):
         self.x=x
         self.y=y
-        self.vx=vx
-        self.vy=vy
+        self.cos=cos(angle)
+        self.sin=sin(angle)
+        self.vx=v*self.cos
+        self.vy=v*self.sin
+        self.ff=1/100
         self.ax=ax
         self.ay=ay
         self.dt=0.1
@@ -19,6 +22,15 @@ class Personnage():
     def evoluer(self):
         self.vx=self.vx+self.ax*self.dt
         self.vy=self.vy+self.ay*self.dt
+        self.v=sqrt(((self.vx)**2)+((self.vy)**2))
+        if self.v!=0:
+            self.kff=(self.v-self.ff)/(self.v)
+        if self.v>0:
+            self.vx=self.kff*self.vx
+            self.vy=self.kff*self.vy
+        else:
+            self.vx=0
+            self.vy=0
         self.x=self.x+self.vx*self.dt
         self.y=self.y+self.vy*self.dt
 
@@ -332,7 +344,10 @@ def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     if fB==0:
         fB=1/100
     E=((fA**2) + (fB**2) - (fC**2)) / (2*fA*fB)
-    E=(int(E*100))/100
+    if E>1:
+        E=1
+    elif E<-1:
+        E=-1
     QS=acos(E)
     return QS
 
