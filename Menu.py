@@ -1,7 +1,5 @@
 from tkinter import*
-from Jeu_du_8 import*
-from Francais import*
-from Jeu_du_9 import*
+from Billard import*
 import pygame
 
 pygame.init()
@@ -18,12 +16,17 @@ def menu():
     aire.pack()
     Bouton1=Button(fen, text = "Billard Americain",command = Américain)
     Bouton1.pack()
-    Bouton2=Button(fen, text= "Billard Français",command = Billard_Français)
-    Bouton2.pack()
+##    Bouton2=Button(fen, text= "Billard Français",command = )
+##    Bouton2.pack()
     Bouton3=Button(fen, text= "Règles",command = Règlement)
     Bouton3.pack()
     Bouton4=Button(fen, text= "Quitter", command= Quitter)
     Bouton4.pack()
+    fen.protocol("WM_DELETE_WINDOW",stop)
+
+def stop():
+    son.stop()
+    fen.destroy()
 
 def Règlement():
     fen=Tk()
@@ -43,7 +46,7 @@ def Billard_Français():
 
 def Jeu8():
     fen.destroy()
-    Jeu_du_8()
+    Jeu_Du_8()
     son.stop()
 
 def Jeu9():
@@ -61,7 +64,7 @@ def Billard_Americain():
     aire.pack()
     Bouton1=Button(fen, text = "Jeu du 8",command= Jeu8)
     Bouton1.pack()
-    Bouton2=Button(fen, text= "Jeu du 9",command= Jeu9)
+##    Bouton2=Button(fen, text= "Jeu du 9",command= )
     Bouton2.pack()
     Bouton3=Button(fen, text= "Quitter",command=Quitter)
     Bouton3.pack()
