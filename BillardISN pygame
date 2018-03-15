@@ -337,40 +337,40 @@ def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     return QS
 
 
-from math import *
-import math
-import pygame
-pygame.init()
-size = (L,H)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Jeu de 8")
+def Jeu_Du_8():
+    global done
+    pygame.init()
+    size = (L,H)
+
+    screen1 = pygame.display.set_mode(size)
+    pygame.display.set_caption("Jeu de 8")
 
 
-##boolean boucle
-done = False
-##creation du jeu
-jeu=Jeu()
+    ##boolean boucle
+    done = False
+    ##creation du jeu
 
-##Musique en jeu
-##music = pygame.mixer.music.load("BirdBrainz_II.wav")
-##pygame.mixer.music.play()
+    jeu=Jeu()
 
-##gestion horloge
-clock = pygame.time.Clock()
-## -------- boucle principale
-while not done:
+    ##Musique en jeu
+    music = pygame.mixer.music.load("BirdBrainz_II.wav")
+    pygame.mixer.music.play()
+
+    ##gestion horloge
+    clock = pygame.time.Clock()
+    ## -------- boucle principale
+    while not done:
 
 
 
-    ## --- evolution du jeu
-    jeu.evoluer()
+        ## --- evolution du jeu
+        jeu.evoluer()
 
-    ## --- affichage
-    jeu.dessiner()
+        ## --- affichage
+        jeu.dessiner(screen1)
 
-    ## --- mise a jour graphique
-    pygame.display.flip()
-    ## --- attente
-    clock.tick(60)
-
-pygame.quit()
+        ## --- mise a jour graphique
+        pygame.display.flip()
+        ## --- attente
+        clock.tick(60)
+    pygame.quit()
