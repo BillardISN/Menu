@@ -223,19 +223,6 @@ class Jeu():
                                     DYR=-DYR
                             ##Calcul lorsque une balle bouge
                             else:
-                                m=(DY/DX)
-                                p=Y-(m*X)
-                                c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
-                                a=1+(m**2)
-                                b=2*((m*(p-YR))-XR)
-                                solution1=(((-b-(sqrt((b**2)-(4*c*a)))))/(2*a))
-                                solution2=(((-b+(sqrt((b**2)-(4*c*a)))))/(2*a))
-                                if DX<0:
-                                    X=solution2
-                                if DX>0:
-                                    X=solution1
-                                Y=(m*X)+p
-
                                 F=Al_Kashi(X,(X+DX),Y,(Y+DY),X,XR,Y,YR,XR,(X+DX),YR,(Y+DY))
                                 VitesseD=sqrt((DX**2) +(DY**2))
                                 angleV2=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
