@@ -270,21 +270,22 @@ class Jeu():
             if event.type == pygame.QUIT:
                 done = True
 
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                X=self.pj.x
-                Y=self.pj.y
-                X2=event.pos[0]
-                Y2=event.pos[1]
-                angle=Al_Kashi(X,X2,Y,Y2,X,X2,Y,Y,X2,X2,Y2,Y)
-                v=20
-                vx=v*cos(angle)
-                vy=v*sin(angle)
-                if X2>X and vx>0:
-                    vx=-vx
-                if Y2>Y and vy>0:
-                    vy=-vy
-                self.pj.vx=vx
-                self.pj.vy=vy
+            if self.pj.vx==0 and self.pj.vy==0:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    X=self.pj.x
+                    Y=self.pj.y
+                    X2=event.pos[0]
+                    Y2=event.pos[1]
+                    angle=Al_Kashi(X,X2,Y,Y2,X,X2,Y,Y,X2,X2,Y2,Y)
+                    v=30
+                    vx=v*cos(angle)
+                    vy=v*sin(angle)
+                    if X2>X and vx>0:
+                        vx=-vx
+                    if Y2>Y and vy>0:
+                        vy=-vy
+                    self.pj.vx=vx
+                    self.pj.vy=vy
 
     def dessiner(self):
         WHITE = (0xFF, 0xFF, 0xFF)
