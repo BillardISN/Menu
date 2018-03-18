@@ -72,7 +72,7 @@ class Cercle():
 class Jeu():
 
     def __init__(self):
-        self.pj=Personnage(350,100,20,0,0,0)
+        self.pj=Personnage(350,100,0,1,0,0)
         self.ba=Personnage(400,400,0,0,0,0)
         self.bb=Personnage(700,400,0,0,0,0)
         self.bc=Personnage(300,300,0,0,0,0)
@@ -83,7 +83,7 @@ class Jeu():
         self.bh=Personnage(600,300,0,0,0,0)
         self.bi=Personnage(600,100,0,0,0,0)
         self.bj=Personnage(500,400,0,0,0,0)
-        self.bk=Personnage(100,300,0,0,0,0)
+        self.bk=Personnage(100,400,0,0,0,0)
         self.bl=Personnage(100,200,0,0,0,0)
         self.bm=Personnage(100,100,0,0,0,0)
         self.bn=Personnage(400,300,0,0,0,0)
@@ -262,17 +262,17 @@ class Jeu():
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
 
-        Tir=True
+        self.Tir=True
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
-                Tir=False
+                self.Tir=False
 
         ## --- gestion des evenements
         for event in pygame.event.get():
             ##joueur quitte
             if event.type == pygame.QUIT:
                 done = True
-            if Tir:
+            if self.Tir:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     X=self.pj.x
                     Y=self.pj.y
@@ -348,6 +348,9 @@ class Jeu():
                 balle.vx=0
                 balle.vy=0
             compteur+=1
+        if self.pj.rayon<1 and self.Tir==True:
+            self.pj=Personnage(350,100,0,1,0,0)
+            self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
 def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     ##Calcul d'un angle à partir de 3 points
     fA = sqrt((Xa1-Xa2)**2 + (Ya1-Ya2)**2)
