@@ -262,22 +262,24 @@ class Jeu():
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
 
-
+        Tir=True
+        for balle in self.Liste:
+            if balle.vx!=0 or balle.vy!=0:
+                Tir=False
 
         ## --- gestion des evenements
         for event in pygame.event.get():
             ##joueur quitte
             if event.type == pygame.QUIT:
                 done = True
-
-            if self.pj.vx==0 and self.pj.vy==0:
+            if Tir:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     X=self.pj.x
                     Y=self.pj.y
                     X2=event.pos[0]
                     Y2=event.pos[1]
                     angle=Al_Kashi(X,X2,Y,Y2,X,X2,Y,Y,X2,X2,Y2,Y)
-                    v=30
+                    v=50
                     vx=v*cos(angle)
                     vy=v*sin(angle)
                     if X2>X and vx>0:
