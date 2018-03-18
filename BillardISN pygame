@@ -344,6 +344,9 @@ class Jeu():
             rayon=balle.rayon
             if rayon>1:
                 pygame.draw.circle(screen,listecouleur[compteur],(int(balle.x),int(balle.y)),rayon)
+            else:
+                balle.vx=0
+                balle.vy=0
             compteur+=1
 def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     ##Calcul d'un angle à partir de 3 points
