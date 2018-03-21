@@ -302,7 +302,7 @@ class Jeu():
                 self.y_3=Y+D2*sin(can_angle_3)
                 self.x_4=X+D2*cos(can_angle_4)
                 self.y_4=Y+D2*sin(can_angle_4)
-                if y>Y:
+                if y>=Y:
                     x1=self.x_1
                     y1=self.y_1
                     self.x_1=self.x_2
