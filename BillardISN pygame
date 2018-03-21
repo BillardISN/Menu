@@ -10,7 +10,7 @@ class Personnage():
         self.sin=sin(angle)
         self.vx=v*self.cos
         self.vy=v*self.sin
-        self.ff=1/100
+        self.ff=5/100
         self.ax=ax
         self.ay=ay
         self.dt=0.1
