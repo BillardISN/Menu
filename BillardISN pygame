@@ -266,7 +266,8 @@ class Jeu():
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
                 self.Tir=False
-
+        X=self.pj.x
+        Y=self.pj.y
         ## --- gestion des evenements
         for event in pygame.event.get():
             ##joueur quitte
