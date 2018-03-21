@@ -272,6 +272,42 @@ class Jeu():
             ##joueur quitte
             if event.type == pygame.QUIT:
                 done = True
+            if event.type == pygame.MOUSEMOTION:
+                self.x=event.pos[0]
+                self.y=event.pos[1]
+                x=self.x
+                y=self.y
+                can_angle=Al_Kashi(X,x,Y,y,X,x,Y,Y,x,x,y,Y)
+                ecart=(1/36)*math.pi
+                ecart2=(1/144)*math.pi
+                if y<Y:
+                    can_angle=-can_angle
+                    ecart=-ecart
+                    if x<X:
+                        can_angle=-math.pi-can_angle
+                elif x<X:
+                    can_angle=math.pi-can_angle
+                can_angle_1=can_angle-ecart
+                can_angle_2=can_angle+ecart
+                can_angle_3=can_angle-ecart2
+                can_angle_4=can_angle+ecart2
+                D1=40
+                D2=400
+                self.x_1=X+D1*cos(can_angle_1)
+                self.y_1=Y+D1*sin(can_angle_1)
+                self.x_2=X+D1*cos(can_angle_2)
+                self.y_2=Y+D1*sin(can_angle_2)
+                self.x_3=X+D2*cos(can_angle_3)
+                self.y_3=Y+D2*sin(can_angle_3)
+                self.x_4=X+D2*cos(can_angle_4)
+                self.y_4=Y+D2*sin(can_angle_4)
+                if y>Y:
+                    x1=self.x_1
+                    y1=self.y_1
+                    self.x_1=self.x_2
+                    self.y_1=self.y_2
+                    self.x_2=x1
+                    self.y_2=y1
             if self.Tir:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     X=self.pj.x
@@ -296,6 +332,7 @@ class Jeu():
         BLACK = (0x00, 0x00, 0x00)
         GREEN = (0x3A, 0x9D, 0x23)
         GREENH = (0x1B, 0x4F, 0x08)
+        BRUNFoncé=(0x5B,0x3C,0x11)
         BRUN = (0x74, 0x35, 0x03)
         YELLOW = (0xFE, 0xFE,0x01)
         
@@ -351,6 +388,8 @@ class Jeu():
         if self.pj.rayon<1 and self.Tir==True:
             self.pj=Personnage(350,100,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
+        if self.Tir:
+            pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
 def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     ##Calcul d'un angle à partir de 3 points
     fA = sqrt((Xa1-Xa2)**2 + (Ya1-Ya2)**2)
