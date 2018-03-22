@@ -10,7 +10,7 @@ class Personnage():
         self.sin=sin(angle)
         self.vx=v*self.cos
         self.vy=v*self.sin
-        self.ff=5/100
+        self.ff=1/10
         self.ax=ax
         self.ay=ay
         self.dt=0.1
@@ -72,22 +72,22 @@ class Cercle():
 class Jeu():
 
     def __init__(self):
-        self.pj=Personnage(350,100,0,1,0,0)
-        self.ba=Personnage(400,400,0,0,0,0)
-        self.bb=Personnage(700,400,0,0,0,0)
-        self.bc=Personnage(300,300,0,0,0,0)
-        self.bd=Personnage(200,300,0,0,0,0)
-        self.be=Personnage(100,300,0,0,0,0)
-        self.bf=Personnage(200,200,0,0,0,0)
-        self.bg=Personnage(200,100,0,0,0,0)
-        self.bh=Personnage(600,300,0,0,0,0)
-        self.bi=Personnage(600,100,0,0,0,0)
-        self.bj=Personnage(500,400,0,0,0,0)
-        self.bk=Personnage(100,400,0,0,0,0)
-        self.bl=Personnage(100,200,0,0,0,0)
-        self.bm=Personnage(100,100,0,0,0,0)
-        self.bn=Personnage(400,300,0,0,0,0)
-        self.bo=Personnage(400,100,0,0,0,0)
+        self.pj=Personnage(750,250,0,1,0,0)
+        self.ba=Personnage(175,250,0,0,0,0)
+        self.bb=Personnage(235,250,0,0,0,0)
+        self.bc=Personnage(205,265,0,0,0,0)
+        self.bd=Personnage(145,295,0,0,0,0)
+        self.be=Personnage(175,220,0,0,0,0)
+        self.bf=Personnage(145,235,0,0,0,0)
+        self.bg=Personnage(115,250,0,0,0,0)
+        self.bh=Personnage(115,190,0,0,0,0)
+        self.bi=Personnage(205,235,0,0,0,0)
+        self.bj=Personnage(175,280,0,0,0,0)
+        self.bk=Personnage(115,310,0,0,0,0)
+        self.bl=Personnage(145,205,0,0,0,0)
+        self.bm=Personnage(115,220,0,0,0,0)
+        self.bn=Personnage(145,265,0,0,0,0)
+        self.bo=Personnage(115,280,0,0,0,0)
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
         self.obstacles+=[Obstacle(30,60,0,H-120,False)]
@@ -180,7 +180,7 @@ class Jeu():
                         balle.x=obs.x
                         balle.y=obs.y
                         balle.rayon=balle.rayon-1
-            if balle.vx!=0 and balle.vy!=0:
+            if balle.vx!=0 or balle.vy!=0:
                 for balle2 in self.Liste:
                     condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                     if balle.x!=balle2.x and balle.y!=balle2.y:
@@ -316,7 +316,7 @@ class Jeu():
                     X2=event.pos[0]
                     Y2=event.pos[1]
                     angle=Al_Kashi(X,X2,Y,Y2,X,X2,Y,Y,X2,X2,Y2,Y)
-                    v=50
+                    v=100
                     vx=v*cos(angle)
                     vy=v*sin(angle)
                     if X2>X and vx>0:
@@ -336,7 +336,7 @@ class Jeu():
         BRUNFoncé=(0x5B,0x3C,0x11)
         BRUN = (0x74, 0x35, 0x03)
         YELLOW = (0xFE, 0xFE,0x01)
-        
+
         listecouleur=[WHITE,BLACK]
         for i in range (7):
             listecouleur+=[RED]
@@ -387,7 +387,7 @@ class Jeu():
                 balle.vy=0
             compteur+=1
         if self.pj.rayon<1 and self.Tir==True:
-            self.pj=Personnage(350,100,0,1,0,0)
+            self.pj=Personnage(750,250,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
@@ -409,40 +409,41 @@ def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     return QS
 
 
-def Jeu_Du_8():
-    global done
-    pygame.init()
-    size = (L,H)
+import pygame
+from math import *
+import math
+pygame.init()
+size = (L,H)
 
-    screen1 = pygame.display.set_mode(size)
-    pygame.display.set_caption("Jeu de 8")
-
-
-    ##boolean boucle
-    done = False
-    ##creation du jeu
-
-    jeu=Jeu()
-
-    ##Musique en jeu
-    music = pygame.mixer.music.load("BirdBrainz_II.wav")
-    pygame.mixer.music.play()
-
-    ##gestion horloge
-    clock = pygame.time.Clock()
-    ## -------- boucle principale
-    while not done:
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Jeu de 8")
 
 
+##boolean boucle
+done = False
+##creation du jeu
 
-        ## --- evolution du jeu
-        jeu.evoluer()
+jeu=Jeu()
 
-        ## --- affichage
-        jeu.dessiner(screen1)
+##Musique en jeu
+##music = pygame.mixer.music.load("BirdBrainz_II.wav")
+##pygame.mixer.music.play()
 
-        ## --- mise a jour graphique
-        pygame.display.flip()
-        ## --- attente
-        clock.tick(60)
-    pygame.quit()
+##gestion horloge
+clock = pygame.time.Clock()
+## -------- boucle principale
+while not done:
+
+
+
+    ## --- evolution du jeu
+    jeu.evoluer()
+
+    ## --- affichage
+    jeu.dessiner()
+
+    ## --- mise a jour graphique
+    pygame.display.flip()
+    ## --- attente
+    clock.tick(60)
+pygame.quit()
