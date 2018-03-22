@@ -16,8 +16,8 @@ def menu():
     aire.pack()
     Bouton1=Button(fen, text = "Billard Americain",command = Américain)
     Bouton1.pack()
-##    Bouton2=Button(fen, text= "Billard Français",command = )
-##    Bouton2.pack()
+    Bouton2=Button(fen, text= "Billard Anglais",command = Jeu_Anglais )
+    Bouton2.pack()
     Bouton3=Button(fen, text= "Règles",command = Règlement)
     Bouton3.pack()
     Bouton4=Button(fen, text= "Quitter", command= Quitter)
@@ -53,6 +53,10 @@ def Jeu9():
     fen.destroy()
     Jeu_du_9()
     son.stop()
+def Jeu_Anglais():
+    fen.destroy()
+    Anglais()
+    son.stop
 
 def Billard_Americain():
     global fen, fen2, fen3
@@ -65,7 +69,7 @@ def Billard_Americain():
     Bouton1=Button(fen, text = "Jeu du 8",command= Jeu8)
     Bouton1.pack()
 ##    Bouton2=Button(fen, text= "Jeu du 9",command= )
-    Bouton2.pack()
+##    Bouton2.pack()
     Bouton3=Button(fen, text= "Quitter",command=Quitter)
     Bouton3.pack()
     Bouton4=Button(fen, text= "Retour",command=Retour)
