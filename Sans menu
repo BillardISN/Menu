@@ -1,0 +1,38 @@
+import pygame
+from math import *
+import math
+pygame.init()
+size = (L,H)
+
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Jeu de 8")
+
+
+##boolean boucle
+done = False
+##creation du jeu
+
+jeu=Jeu()
+
+##Musique en jeu
+##music = pygame.mixer.music.load("BirdBrainz_II.wav")
+##pygame.mixer.music.play()
+
+##gestion horloge
+clock = pygame.time.Clock()
+## -------- boucle principale
+while not done:
+
+
+
+    ## --- evolution du jeu
+    jeu.evoluer()
+
+    ## --- affichage
+    jeu.dessiner()
+
+    ## --- mise a jour graphique
+    pygame.display.flip()
+    ## --- attente
+    clock.tick(60)
+pygame.quit()
