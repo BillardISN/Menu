@@ -183,7 +183,7 @@ class Jeu():
             if balle.vx!=0 or balle.vy!=0:
                 for balle2 in self.Liste:
                     condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
-                    if balle.x!=balle2.x and balle.y!=balle2.y:
+                    if balle.x!=balle2.x or balle.y!=balle2.y:
                         for verifier in range(len(verification)):
                             if condition==verification[verifier]:
                                 Ok=0
