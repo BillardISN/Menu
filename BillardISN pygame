@@ -88,6 +88,23 @@ class Jeu():
         self.bm=Personnage(115,220,0,0,0,0)
         self.bn=Personnage(145,265,0,0,0,0)
         self.bo=Personnage(115,280,0,0,0,0)
+        self.nmax=False
+        self.vx=0
+        self.vy=0
+        self.x_1=0
+        self.y_1=0
+        self.x_2=0
+        self.y_2=0
+        self.x_3=0
+        self.y_3=0
+        self.x_4=0
+        self.y_4=0
+        self.v=0
+        self.can_angle=0
+        self.n=0
+        self.Clic=False
+        self.Clic2=False
+        self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
         self.obstacles+=[Obstacle(30,60,0,H-120,False)]
@@ -106,19 +123,8 @@ class Jeu():
         self.troue+=[Cercle(L/2,475,True)]
         self.troue+=[Cercle(975,475,True)]
 
-##        self.obstacles+=[Obstacle(50,400,400,50,False)]
-##        self.obstacles+=[Obstacle(0,0,50,450,False)]
-##        self.obstacles+=[Obstacle(450,0,50,450,False)]
-##        self.obstacles+=[Obstacle(100,300,200,10,False)]
-##        self.obstacles+=[Obstacle(200,180,10,70,False)]
-##        self.obstacles+=[Obstacle(250,180,10,70,False)]
-##        self.obstacles+=[Obstacle(250,179,100,10,False)]
-##        self.obstacles+=[Obstacle(150,150,20,20,True)]
-
-
     def evoluer(self):
         global done
-##        Liste=[self.pj,self.br,self.j]
 
         ##deplace
         self.pj.debout=False
@@ -262,69 +268,124 @@ class Jeu():
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
 
+        ## Tir permet de vérifier que toute les balles sont immobiles
         self.Tir=True
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
                 self.Tir=False
+                self.n=0
+                self.Clic=False
+                self.Clic2=False
+                self.SansClic=True
+                self.v=0
+                self.nmax=False
+
         X=self.pj.x
         Y=self.pj.y
+        v_can=2
+        v_can2=25
+
         ## --- gestion des evenements
         for event in pygame.event.get():
             ##joueur quitte
             if event.type == pygame.QUIT:
                 done = True
-            if event.type == pygame.MOUSEMOTION:
-                self.x=event.pos[0]
-                self.y=event.pos[1]
-                x=self.x
-                y=self.y
-                can_angle=Al_Kashi(X,x,Y,y,X,x,Y,Y,x,x,y,Y)
-                ecart=(1/36)*math.pi
-                ecart2=(1/144)*math.pi
-                if y<Y:
-                    can_angle=-can_angle
-                    ecart=-ecart
-                    if x<X:
-                        can_angle=-math.pi-can_angle
-                elif x<X:
-                    can_angle=math.pi-can_angle
-                can_angle_1=can_angle-ecart
-                can_angle_2=can_angle+ecart
-                can_angle_3=can_angle-ecart2
-                can_angle_4=can_angle+ecart2
-                D1=40
-                D2=400
-                self.x_1=X+D1*cos(can_angle_1)
-                self.y_1=Y+D1*sin(can_angle_1)
-                self.x_2=X+D1*cos(can_angle_2)
-                self.y_2=Y+D1*sin(can_angle_2)
-                self.x_3=X+D2*cos(can_angle_3)
-                self.y_3=Y+D2*sin(can_angle_3)
-                self.x_4=X+D2*cos(can_angle_4)
-                self.y_4=Y+D2*sin(can_angle_4)
-                if y>=Y:
-                    x1=self.x_1
-                    y1=self.y_1
-                    self.x_1=self.x_2
-                    self.y_1=self.y_2
-                    self.x_2=x1
-                    self.y_2=y1
+
             if self.Tir:
+                if self.SansClic:
+                    if event.type == pygame.MOUSEMOTION and event.buttons[0] != 1:
+                        self.x=event.pos[0]
+                        self.y=event.pos[1]
+                        x=self.x
+                        y=self.y
+                        can_angle=Al_Kashi(X,x,Y,y,X,x,Y,Y,x,x,y,Y)
+                        ecart=(1/15)*math.pi
+                        ecart2=(1/140)*math.pi
+                        if y<Y:
+                            can_angle=-can_angle
+                            ecart=-ecart
+                            if x<X:
+                                can_angle=-math.pi-can_angle
+                        elif x<X:
+                            can_angle=math.pi-can_angle
+                        can_angle_1=can_angle-ecart
+                        can_angle_2=can_angle+ecart
+                        can_angle_3=can_angle-ecart2
+                        can_angle_4=can_angle+ecart2
+                        D1=self.pj.rayon
+                        D2=400
+                        self.can_angle=can_angle
+                        self.x_1=X+D1*cos(can_angle_1)
+                        self.y_1=Y+D1*sin(can_angle_1)
+                        self.x_2=X+D1*cos(can_angle_2)
+                        self.y_2=Y+D1*sin(can_angle_2)
+                        self.x_3=X+D2*cos(can_angle_3)
+                        self.y_3=Y+D2*sin(can_angle_3)
+                        self.x_4=X+D2*cos(can_angle_4)
+                        self.y_4=Y+D2*sin(can_angle_4)
+                        if y>=Y:
+                            x1=self.x_1
+                            y1=self.y_1
+                            self.x_1=self.x_2
+                            self.y_1=self.y_2
+                            self.x_2=x1
+                            self.y_2=y1
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    X=self.pj.x
-                    Y=self.pj.y
-                    X2=event.pos[0]
-                    Y2=event.pos[1]
-                    angle=Al_Kashi(X,X2,Y,Y2,X,X2,Y,Y,X2,X2,Y2,Y)
-                    v=100
-                    vx=v*cos(angle)
-                    vy=v*sin(angle)
-                    if X2>X and vx>0:
-                        vx=-vx
-                    if Y2>Y and vy>0:
-                        vy=-vy
-                    self.pj.vx=vx
-                    self.pj.vy=vy
+                    self.Clic=True
+                    self.SansClic=False
+
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                        v=self.v
+                        self.vx=-v*cos(self.can_angle)
+                        self.vy=-v*sin(self.can_angle)
+                        self.Clic2=True
+                        self.Clic=False
+        if self.Clic:
+            if not(self.nmax):
+                if self.n<=150:
+                    self.x_1+=v_can*cos(self.can_angle)
+                    self.y_1+=v_can*sin(self.can_angle)
+                    self.x_2+=v_can*cos(self.can_angle)
+                    self.y_2+=v_can*sin(self.can_angle)
+                    self.x_3+=v_can*cos(self.can_angle)
+                    self.y_3+=v_can*sin(self.can_angle)
+                    self.x_4+=v_can*cos(self.can_angle)
+                    self.y_4+=v_can*sin(self.can_angle)
+                    self.v+=1.5
+                    self.n+=v_can
+                else:
+                    self.nmax=True
+            else:
+                if self.n>0:
+                    self.x_1+=-v_can*cos(self.can_angle)
+                    self.y_1+=-v_can*sin(self.can_angle)
+                    self.x_2+=-v_can*cos(self.can_angle)
+                    self.y_2+=-v_can*sin(self.can_angle)
+                    self.x_3+=-v_can*cos(self.can_angle)
+                    self.y_3+=-v_can*sin(self.can_angle)
+                    self.x_4+=-v_can*cos(self.can_angle)
+                    self.y_4+=-v_can*sin(self.can_angle)
+                    self.v+=-1.5
+                    self.n+=-v_can
+                else:
+                    self.nmax=False
+
+
+        if self.Clic2:
+            if self.n>0:
+                self.x_1+=-v_can2*cos(self.can_angle)
+                self.y_1+=-v_can2*sin(self.can_angle)
+                self.x_2+=-v_can2*cos(self.can_angle)
+                self.y_2+=-v_can2*sin(self.can_angle)
+                self.x_3+=-v_can2*cos(self.can_angle)
+                self.y_3+=-v_can2*sin(self.can_angle)
+                self.x_4+=-v_can2*cos(self.can_angle)
+                self.y_4+=-v_can2*sin(self.can_angle)
+                self.n+=-v_can2
+            else:
+                self.Clic2=False
+                self.pj.vx=self.vx
+                self.pj.vy=self.vy
 
     def dessiner(self,screen):
         WHITE = (0xFF, 0xFF, 0xFF)
@@ -386,7 +447,7 @@ class Jeu():
                 balle.vx=0
                 balle.vy=0
             compteur+=1
-        if self.pj.rayon<1 and self.Tir==True:
+        if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H)):
             self.pj=Personnage(750,250,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         if self.Tir:
