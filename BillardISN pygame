@@ -446,6 +446,8 @@ class Jeu():
             else:
                 balle.vx=0
                 balle.vy=0
+                balle.x=-balle.x
+                balle.y=-balle.y
             compteur+=1
         if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H)):
             self.pj=Personnage(750,250,0,1,0,0)
