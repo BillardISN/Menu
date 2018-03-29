@@ -116,12 +116,12 @@ class Jeu():
         self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-35,H-30,False)]
         self.obstacles+=[Obstacle((L/2)+35,H-30,((L-120)/2)-35,H-30,False)]
         self.troue=[]
-        self.troue+=[Cercle(25,20,True)]
-        self.troue+=[Cercle(L/2,20,True)]
-        self.troue+=[Cercle(975,20,True)]
-        self.troue+=[Cercle(25,475,True)]
-        self.troue+=[Cercle(L/2,475,True)]
-        self.troue+=[Cercle(975,475,True)]
+        self.troue+=[Cercle(15,30,True)]
+        self.troue+=[Cercle((L/2)-10,30,True)]
+        self.troue+=[Cercle(965,30,True)]
+        self.troue+=[Cercle(15,485,True)]
+        self.troue+=[Cercle((L/2)-10,485,True)]
+        self.troue+=[Cercle(965,485,True)]
 
     def evoluer(self):
         global done
@@ -208,21 +208,21 @@ class Jeu():
                             ##Calcul lorsque les balles bougent
                             if (DX!=0 or DY!=0) and (DYR==0 and DXR==0):
                                 ## Calcul de la position exact de la balle durant l'impact
-                                if DX!=0:
-                                    m=(DY/DX)
-                                    p=Y-(m*X)
-                                    c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
-                                    a=1+(m**2)
-                                    b=2*((m*(p-YR))-XR)
-                                    delta=(b**2)-(4*c*a)
-                                    if delta>=0:
-                                        solution1=(((-b-(sqrt(delta))))/(2*a))
-                                        solution2=(((-b+(sqrt(delta))))/(2*a))
-                                        if DX<0:
-                                            X=solution2
-                                        if DX>0:
-                                            X=solution1
-                                        Y=(m*X)+p
+##                                if DX!=0:
+##                                    m=(DY/DX)
+##                                    p=Y-(m*X)
+##                                    c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
+##                                    a=1+(m**2)
+##                                    b=2*((m*(p-YR))-XR)
+##                                    delta=(b**2)-(4*c*a)
+##                                    if delta>=0:
+##                                        solution1=(((-b-(sqrt(delta))))/(2*a))
+##                                        solution2=(((-b+(sqrt(delta))))/(2*a))
+##                                        if DX<0:
+##                                            X=solution2
+##                                        if DX>0:
+##                                            X=solution1
+##                                        Y=(m*X)+p
                                         ##Calcul lorsque une balle bouge
                                 F=Al_Kashi(X,(X+DX),Y,(Y+DY),X,XR,Y,YR,XR,(X+DX),YR,(Y+DY))
                                 VitesseD=sqrt((DX**2) +(DY**2))
