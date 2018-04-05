@@ -14,9 +14,9 @@ def menu():
     logo= aire.create_image(901,384, image=mon_image)
     aire.image = mon_image
     aire.pack()
-    Bouton1=Button(fen, text = "Billard Americain",command = Américain)
+    Bouton1=Button(fen, text= "8-Pool",command = Jeu_Anglais)
     Bouton1.pack()
-    Bouton2=Button(fen, text= "Billard Anglais",command = Jeu_Anglais )
+    Bouton2=Button(fen, text = "Billard Français",command = Billard_Français)
     Bouton2.pack()
     Bouton3=Button(fen, text= "Règles",command = Règlement)
     Bouton3.pack()
@@ -35,10 +35,6 @@ def Règlement():
 
     Label(l, text="Billard Français : \n\n Une partie de billard français se dispute à deux joueurs. L’un choisi la balle blanche et l’autre la balle jaune.\n Le but du jeu est de marquer le plus de points possible. \n Pour marquer un point, les joueurs  doivent toucher les deux autres billes en un tir.\n Tant que le joueur réussi à toucher les deux autres balles, il continu. Lorsqu’il manque le point, c’est son adversaire qui prend la main.").pack()
 
-def Américain():
-    fen.destroy()
-    Billard_Americain()
-
 def Billard_Français():
     fen.destroy()
     Francais()
@@ -52,7 +48,7 @@ def Jeu8():
 def Jeu9():
     fen.destroy()
     Jeu_du_9()
-    son.stop()
+    ##son.stop()
 def Jeu_Anglais():
     fen.destroy()
     Anglais()
