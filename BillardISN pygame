@@ -74,20 +74,20 @@ class Jeu():
     def __init__(self):
         self.pj=Personnage(750,250,0,1,0,0)
         self.ba=Personnage(175,250,0,0,0,0)
-        self.bb=Personnage(235,250,0,0,0,0)
-        self.bc=Personnage(205,265,0,0,0,0)
-        self.bd=Personnage(145,295,0,0,0,0)
-        self.be=Personnage(175,220,0,0,0,0)
-        self.bf=Personnage(145,235,0,0,0,0)
-        self.bg=Personnage(115,250,0,0,0,0)
-        self.bh=Personnage(115,190,0,0,0,0)
-        self.bi=Personnage(205,235,0,0,0,0)
-        self.bj=Personnage(175,280,0,0,0,0)
-        self.bk=Personnage(115,310,0,0,0,0)
-        self.bl=Personnage(145,205,0,0,0,0)
-        self.bm=Personnage(115,220,0,0,0,0)
-        self.bn=Personnage(145,265,0,0,0,0)
-        self.bo=Personnage(115,280,0,0,0,0)
+        self.bb=Personnage(240,252,0,0,0,0)
+        self.bc=Personnage(207,267,0,0,0,0)
+        self.bd=Personnage(143,300,0,0,0,0)
+        self.be=Personnage(175,218,0,0,0,0)
+        self.bf=Personnage(143,233,0,0,0,0)
+        self.bg=Personnage(110,250,0,0,0,0)
+        self.bh=Personnage(110,185,0,0,0,0)
+        self.bi=Personnage(207,233,0,0,0,0)
+        self.bj=Personnage(175,282,0,0,0,0)
+        self.bk=Personnage(110,315,0,0,0,0)
+        self.bl=Personnage(143,200,0,0,0,0)
+        self.bm=Personnage(110,218,0,0,0,0)
+        self.bn=Personnage(143,267,0,0,0,0)
+        self.bo=Personnage(110,282,0,0,0,0)
         self.nmax=False
         self.vx=0
         self.vy=0
@@ -236,6 +236,7 @@ class Jeu():
                                 DX=(DX-DXR)
                                 DY=(DY-DYR)
                             else:
+###-----------------------------------------------------------------------------------------------------------------
                                 angle1=Al_Kashi(X,X-DX,Y,Y-DY,X,X-DX,Y,Y,X-DX,X-DX,Y-DY,Y)
                                 angle2=Al_Kashi(XR,XR-DXR,YR,YR-DYR,XR,XR-DXR,YR,YR,XR-DXR,XR-DXR,YR-DYR,YR)
                                 v1=sqrt((DX**2)+((DY)**2))
@@ -256,6 +257,69 @@ class Jeu():
                                     DXR=-DXR
                                 if YR-Y<0:
                                     DYR=-DYR
+###-----------------------------------------------------------------------------------------------------------------                                    
+                                    
+                                DX1=DX
+                                DY1=DY
+                                DX=DXR
+                                DY=DYR
+                                DXR=DX1
+                                DYR=DY1
+##                                angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+##                                if Y>YR:
+##                                    angle1=-angle1
+##                                    if X>XR:
+##                                        angle1=-math.pi-angle1
+##                                elif X>XR:
+##                                    angle1=math.pi-angle1
+##                                if angle1>math.pi:
+##                                    angle1=angle1-2*math.pi
+##                                elif angle1<-math.pi:
+##                                    angle1=angle1+2*math.pi
+##                                if -math.pi/4<=angle1<math.pi/4:
+####                                    DX=-DX
+####                                    DXR=-DXR
+##                                    if DX>0:
+##                                        DX=-DX
+##                                    else:
+##                                        DY=-DY
+##                                    if DXR<0:
+##                                        DXR=-DXR
+##                                    else:
+##                                        DYR=-DYR
+##                                if math.pi/4<=angle1<3*math.pi/4:
+####                                    DY=-DY
+####                                    DYR=-DYR
+##                                    if DY>0:
+##                                        DY=-DY
+##                                    else:
+##                                        DX=-DX
+##                                    if DYR<0:
+##                                        DYR=-DYR
+##                                    else:
+##                                        DXR=-DXR
+##                                if 3*math.pi/4<=angle1<=math.pi or -math.pi<=angle1<-3*math.pi/4:
+####                                    DX=-DX
+####                                    DXR=-DXR
+##                                    if DX<0:
+##                                        DX=-DX
+##                                    else:
+##                                        DY=-DY
+##                                    if DXR>0:
+##                                        DXR=-DXR
+##                                    else:
+##                                        DYR=-DYR
+##                                if -3*math.pi/4<=angle1<-math.pi/4:
+####                                          DY=-DY
+####                                          DYR=-DYR
+##                                    if DY<0:
+##                                        DY=-DY
+##                                    else:
+##                                        DX=-DX
+##                                    if DYR>0:
+##                                        DYR=-DYR
+##                                    else:
+##                                        DXR=-DXR
 
                             balle.x=X
                             balle.y=Y
