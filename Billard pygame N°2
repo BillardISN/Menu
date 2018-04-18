@@ -283,6 +283,32 @@ class Jeu():
                             balle2.vy=DYR
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
+            else:
+                for balle2 in self.Liste:
+                    X=balle.x
+                    Y=balle.y
+                    XR=balle2.x
+                    YR=balle2.y
+                    condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
+                    if (balle2.vx==0 and balle2.vy==0) and condition<=balle2.rayon+balle.rayon:
+                        angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                        if X>XR:
+                            angle1=math.pi-angle1
+                        if Y>YR:
+                            angle1=-angle1
+                        if YR<Y:
+                            angle1=-angle1
+                            if X>XR:
+                                angle1=-math.pi-angle1
+                        angle2=angle1+math.pi
+                        distance_cos1=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle1)
+                        distance_sin1=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle1)
+                        distance_cos2=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle2)
+                        distance_sin2=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle2)
+                        balle.x=balle.x-distance_cos1
+                        balle.y=balle.y-distance_sin1
+                        balle2.x=balle2.x-distance_cos2
+                        balle2.y=balle2.y-distance_sin2
 
         ## Tir permet de vérifier que toute les balles sont immobiles
         self.Tir=True
