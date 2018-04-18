@@ -160,23 +160,41 @@ class Jeu():
                     if (obs.mechant):
                         balle=Personnage()
                     else:
-                        if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y)and (balle.vy>0):
+                        if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y):
                             ##obstacle en bas
-                            balle.vy=-balle.vy
+                            db=abs(balle.y-obs.y)
+                            balle.y += -db
+                            balle.vy=-ff*balle.vy
+                            balle.angle=-balle.angle
                             balle.y=obs.y-balle.rayon
                             ##le personnage est debout
                             balle.debout=True
                         else:
                             if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
                                 ##obstacle en haut
-                                balle.vy=-balle.vy
+                                db=abs(balle.y-(obs.y+obs.ly))
+                                balle.y += db
+                                balle.vy=-ff*balle.vy
+                                balle.angle=-balle.angle
                             else:
                                 if(balle.x<obs.x):
                                     ##obstacle a droite
-                                    balle.vx=-balle.vx
+                                    db=abs(balle.x-obs.x)
+                                    balle.x += -db
+                                    balle.vx=-ff*balle.vx
+                                    if balle.angle>0:
+                                        balle.angle=math.pi+balle.angle
+                                    if balle.angle<0:
+                                        balle.angle=math.pi-balle.angle
                                 if(balle.x>obs.x+obs.lx):
                                     ##obstacle en gauche
-                                    balle.vx=-balle.vx
+                                    db=abs(balle.x-(obs.x+obs.lx))
+                                    balle.x += db
+                                    balle.vx=-ff*balle.vx
+                                    if balle.angle<0:
+                                        balle.angle=math.pi+balle.angle
+                                    if balle.angle>0:
+                                        balle.angle=math.pi-balle.angle
 
             ##détection de la collision
             Ok=1
