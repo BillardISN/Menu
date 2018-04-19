@@ -74,20 +74,20 @@ class Jeu():
     def __init__(self):
         self.pj=Personnage(750,250,0,1,0,0)
         self.ba=Personnage(175,250,0,0,0,0)
-        self.bb=Personnage(235,250,0,0,0,0)
-        self.bc=Personnage(205,265,0,0,0,0)
-        self.bd=Personnage(145,295,0,0,0,0)
-        self.be=Personnage(175,220,0,0,0,0)
-        self.bf=Personnage(145,235,0,0,0,0)
-        self.bg=Personnage(115,250,0,0,0,0)
-        self.bh=Personnage(115,190,0,0,0,0)
-        self.bi=Personnage(205,235,0,0,0,0)
-        self.bj=Personnage(175,280,0,0,0,0)
-        self.bk=Personnage(115,310,0,0,0,0)
-        self.bl=Personnage(145,205,0,0,0,0)
-        self.bm=Personnage(115,220,0,0,0,0)
-        self.bn=Personnage(145,265,0,0,0,0)
-        self.bo=Personnage(115,280,0,0,0,0)
+        self.bb=Personnage(240,252,0,0,0,0)
+        self.bc=Personnage(207,267,0,0,0,0)
+        self.bd=Personnage(143,300,0,0,0,0)
+        self.be=Personnage(175,218,0,0,0,0)
+        self.bf=Personnage(143,233,0,0,0,0)
+        self.bg=Personnage(110,250,0,0,0,0)
+        self.bh=Personnage(110,185,0,0,0,0)
+        self.bi=Personnage(207,233,0,0,0,0)
+        self.bj=Personnage(175,282,0,0,0,0)
+        self.bk=Personnage(110,315,0,0,0,0)
+        self.bl=Personnage(143,200,0,0,0,0)
+        self.bm=Personnage(110,218,0,0,0,0)
+        self.bn=Personnage(143,267,0,0,0,0)
+        self.bo=Personnage(110,282,0,0,0,0)
         self.nmax=False
         self.vx=0
         self.vy=0
@@ -106,6 +106,7 @@ class Jeu():
         self.Clic2=False
         self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
+        self.verification2=[0]
         self.obstacles=[]
         self.obstacles+=[Obstacle(30,60,0,H-120,False)]
         self.obstacles+=[Obstacle(L-30,60,L-30,H-120,False)]
@@ -130,22 +131,8 @@ class Jeu():
         self.pj.debout=False
 
         ##deplace le pj
-        self.pj.evoluer()
-        self.ba.evoluer()
-        self.bb.evoluer()
-        self.bc.evoluer()
-        self.bd.evoluer()
-        self.be.evoluer()
-        self.bf.evoluer()
-        self.bg.evoluer()
-        self.bh.evoluer()
-        self.bi.evoluer()
-        self.bj.evoluer()
-        self.bk.evoluer()
-        self.bl.evoluer()
-        self.bm.evoluer()
-        self.bn.evoluer()
-        self.bo.evoluer()
+        for évoluer in self.Liste:
+            évoluer.evoluer()
 
         ##test collision
         collision=False
@@ -154,7 +141,7 @@ class Jeu():
 
         for balle in self.Liste:
             for obs in self.obstacles:
-
+                ff=0.8
                 if (balle.collision(obs)):
                     ##si l'obstacle est mechant
                     if (obs.mechant):
@@ -162,39 +149,28 @@ class Jeu():
                     else:
                         if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y):
                             ##obstacle en bas
-                            db=abs(balle.y-obs.y)
+                            db=abs(balle.y+balle.rayon-obs.y)
                             balle.y += -db
                             balle.vy=-ff*balle.vy
-                            balle.angle=-balle.angle
-                            balle.y=obs.y-balle.rayon
                             ##le personnage est debout
                             balle.debout=True
                         else:
                             if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
                                 ##obstacle en haut
-                                db=abs(balle.y-(obs.y+obs.ly))
+                                db=abs(balle.y-balle.rayon-(obs.y+obs.ly))
                                 balle.y += db
                                 balle.vy=-ff*balle.vy
-                                balle.angle=-balle.angle
                             else:
                                 if(balle.x<obs.x):
                                     ##obstacle a droite
-                                    db=abs(balle.x-obs.x)
+                                    db=abs(balle.x+balle.rayon-obs.x)
                                     balle.x += -db
                                     balle.vx=-ff*balle.vx
-                                    if balle.angle>0:
-                                        balle.angle=math.pi+balle.angle
-                                    if balle.angle<0:
-                                        balle.angle=math.pi-balle.angle
                                 if(balle.x>obs.x+obs.lx):
                                     ##obstacle en gauche
-                                    db=abs(balle.x-(obs.x+obs.lx))
+                                    db=abs(balle.x-balle.rayon-(obs.x+obs.lx))
                                     balle.x += db
                                     balle.vx=-ff*balle.vx
-                                    if balle.angle<0:
-                                        balle.angle=math.pi+balle.angle
-                                    if balle.angle>0:
-                                        balle.angle=math.pi-balle.angle
 
             ##détection de la collision
             Ok=1
@@ -214,6 +190,10 @@ class Jeu():
                         conditioncolision=(condition<=balle.rayon+balle2.rayon)
                         ##Calcul des variables après la collision
                         if conditioncolision and Ok==1:
+                            X=balle.x
+                            Y=balle.y
+                            XR=balle2.x
+                            YR=balle2.y
                             X=balle.x
                             Y=balle.y
                             XR=balle2.x
@@ -254,6 +234,15 @@ class Jeu():
                                 DX=(DX-DXR)
                                 DY=(DY-DYR)
                             else:
+                                ops1=True
+                                if self.verification2!=[0]:
+                                    for verifier in range(len(self.verification2)):
+                                        if verifier+1>len(self.verification2):
+                                            if self.verification2[verifier]==self.verification2[verifier+1] and self.verification2[verifier]==condition and self.verification2[verifier]!=0:
+                                                ops1=False
+                                                self.verification2[verifier]=0
+                                                self.verification2[verifier+1]=0
+
 ##                                angle1=Al_Kashi(X,X-DX,Y,Y-DY,X,X-DX,Y,Y,X-DX,X-DX,Y-DY,Y)
 ##                                angle2=Al_Kashi(XR,XR-DXR,YR,YR-DYR,XR,XR-DXR,YR,YR,XR-DXR,XR-DXR,YR-DYR,YR)
 ##
@@ -267,12 +256,23 @@ class Jeu():
 ##                                DY=v1_2*sin(angle1_2)
 ##                                DXR=v2_2*cos(angle2_2)
 ##                                DYR=v2_2*sin(angle2_2)
-                                DX1=DX
-                                DY1=DY
-                                DX=DXR
-                                DY=DYR
-                                DXR=DX1
-                                DYR=DY1
+                                if ops1:
+                                    DX1=DX
+                                    DY1=DY
+                                    DX=DXR
+                                    DY=DYR
+                                    DXR=DX1
+                                    DYR=DY1
+                                else:
+                                    v1=sqrt((DX**2)+(DY**2))
+                                    v2=sqrt((DXR**2)+(DYR**2))
+                                    if v1>v2:
+                                        DXR=-DXR
+                                        DYR=-DYR
+                                    else:
+                                        DX=-DX
+                                        DY=-DY
+
 ##                                condX=(DX and DXR)
 ##                                condY=(DY and DYR)
 ##                                if (condX>0 or condX<0 ) and (condY>0 or condY<0):
@@ -301,6 +301,7 @@ class Jeu():
                             balle2.vy=DYR
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
+                            self.verification2+=[condition]
             else:
                 for balle2 in self.Liste:
                     X=balle.x
@@ -319,10 +320,10 @@ class Jeu():
                             if X>XR:
                                 angle1=-math.pi-angle1
                         angle2=angle1+math.pi
-                        distance_cos1=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle1)
-                        distance_sin1=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle1)
-                        distance_cos2=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle2)
-                        distance_sin2=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle2)
+                        distance_cos1=(((balle2.rayon+balle.rayon+2)-condition)/2)*cos(angle1)
+                        distance_sin1=(((balle2.rayon+balle.rayon+2)-condition)/2)*sin(angle1)
+                        distance_cos2=(((balle2.rayon+balle.rayon+2)-condition)/2)*cos(angle2)
+                        distance_sin2=(((balle2.rayon+balle.rayon+2)-condition)/2)*sin(angle2)
                         balle.x=balle.x-distance_cos1
                         balle.y=balle.y-distance_sin1
                         balle2.x=balle2.x-distance_cos2
