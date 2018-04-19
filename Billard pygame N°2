@@ -141,7 +141,7 @@ class Jeu():
 
         for balle in self.Liste:
             for obs in self.obstacles:
-                ff=0.8
+                ff=0.5
                 if (balle.collision(obs)):
                     ##si l'obstacle est mechant
                     if (obs.mechant):
@@ -235,13 +235,12 @@ class Jeu():
                                 DY=(DY-DYR)
                             else:
                                 ops1=True
-                                if self.verification2!=[0]:
-                                    for verifier in range(len(self.verification2)):
-                                        if verifier+1>len(self.verification2):
-                                            if self.verification2[verifier]==self.verification2[verifier+1] and self.verification2[verifier]==condition and self.verification2[verifier]!=0:
-                                                ops1=False
-                                                self.verification2[verifier]=0
-                                                self.verification2[verifier+1]=0
+                                for verifier in range(len(self.verification2)):
+                                    if verifier+1<len(self.verification2):
+                                        if self.verification2[verifier]==self.verification2[verifier+1] and self.verification2[verifier]==condition and self.verification2[verifier]!=0:
+                                            ops1=False
+                                            self.verification2[verifier]=0
+                                            self.verification2[verifier+1]=0
 
 ##                                angle1=Al_Kashi(X,X-DX,Y,Y-DY,X,X-DX,Y,Y,X-DX,X-DX,Y-DY,Y)
 ##                                angle2=Al_Kashi(XR,XR-DXR,YR,YR-DYR,XR,XR-DXR,YR,YR,XR-DXR,XR-DXR,YR-DYR,YR)
@@ -267,12 +266,15 @@ class Jeu():
                                     v1=sqrt((DX**2)+(DY**2))
                                     v2=sqrt((DXR**2)+(DYR**2))
                                     if v1>v2:
-                                        DXR=-DXR
-                                        DYR=-DYR
+                                        DXR=-0.5*DX
+                                        DYR=-0.5*DY
                                     else:
-                                        DX=-DX
-                                        DY=-DY
-
+                                        DX=-0.5*DXR
+                                        DY=-0.5*DYR
+                                    X=X+DX*0.1
+                                    Y=Y+DY*0.1
+                                    XR=XR+DXR*0.1
+                                    YR=YR+DYR*0.1
 ##                                condX=(DX and DXR)
 ##                                condY=(DY and DYR)
 ##                                if (condX>0 or condX<0 ) and (condY>0 or condY<0):
