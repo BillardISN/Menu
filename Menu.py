@@ -1,6 +1,8 @@
 from tkinter import*
 from Billard import*
 from Français import*
+from Box import*
+from Box2 import*
 import pygame
 
 pygame.init()
