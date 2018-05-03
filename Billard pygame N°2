@@ -234,6 +234,91 @@ class Jeu():
                                 DX=(DX-DXR)
                                 DY=(DY-DYR)
                             else:
+                                X=X-DX*0.1
+                                Y=Y-DY*0.1
+                                XR=XR-DXR*0.1
+                                YR=YR-DYR*0.1
+                                condition=sqrt(((X-XR)**2)+((Y-YR)**2))
+                                angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                if X>XR:
+                                    angle1=math.pi-angle1
+                                if Y>YR:
+                                    angle1=-angle1
+                                if YR<Y:
+                                    angle1=-angle1
+                                    if X>XR:
+                                        angle1=-math.pi-angle1
+                                elif X>XR:
+                                    angle1=math.pi-angle1
+                                angle2=angle1+math.pi
+                                distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
+                                distance_sin1=(abs((2*RAYON)-condition)/2)*sin(angle1)
+                                distance_cos2=(abs((2*RAYON)-condition)/2)*cos(angle2)
+                                distance_sin2=(abs((2*RAYON)-condition)/2)*sin(angle2)
+                                X=X+distance_cos1
+                                Y=Y+distance_sin1
+                                XR=XR+distance_cos2
+                                YR=YR+distance_sin2
+
+                                angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                if X>XR:
+                                    angle1=math.pi-angle1
+                                if Y>YR:
+                                    angle1=-angle1
+                                if YR<Y:
+                                    angle1=-angle1
+                                    if X>XR:
+                                        angle1=-math.pi-angle1
+                                elif X>XR:
+                                    angle1=math.pi-angle1
+                                while angle1>math.pi:
+                                    angle1=angle1-2*math.pi
+                                while angle1<-math.pi:
+                                    angle1=angle1+2*math.pi
+                                if -math.pi/4<=angle1<math.pi/4:
+                                    DX=-DX
+                                    DXR=-DXR
+                                    k=1
+                                if math.pi/4<=angle1<3*math.pi/4:
+                                    DY=-DY
+                                    DYR=-DYR
+                                    k=2
+                                if -math.pi<=angle1<-3*math.pi/4 or 3*math.pi/4<=angle1<=math.pi:
+                                    DX=-DX
+                                    DXR=-DXR
+                                    k=1
+                                if -3*math.pi/4<=angle1<-math.pi/4:
+                                    DY=-DY
+                                    DYR=-DYR
+                                    k=2
+                                V1=sqrt(((DX)**2)+((DY)**2))
+                                V2=sqrt(((DXR)**2)+((DYR)**2))
+                                if sqrt(((X+DX-XR-DXR)**2)+((Y+DY-YR-DYR)**2))>2*RAYON:
+                                    if V1>V2:
+                                        if k==1:
+                                            DXR=-DXR
+                                        elif k==2:
+                                            DYR=-DYR
+                                    else:
+                                        if k==1:
+                                            DX=-DX
+                                        elif k==2:
+                                            DY=-DY
+                                if V1>V2:
+                                    DX=0.8*DX
+                                    DY=0.8*DY
+                                    DXR=1.2*DXR
+                                    DYR=1.2*DYR
+                                else:
+                                    DXR=0.8*DXR
+                                    DYR=0.8*DYR
+                                    DX=1.2*DX
+                                    DY=1.2*DY
+                                X=X+DX*0.1
+                                Y=Y+DY*0.1
+                                XR=XR+DXR*0.1
+                                YR=YR+DYR*0.1
+--------------------------------------------------------------------------------------------------------------------------------
                                 ops1=True
                                 for verifier in range(len(self.verification2)):
                                     if verifier+1<len(self.verification2):
@@ -292,7 +377,7 @@ class Jeu():
 ##                                    DXR=-DXR
 ##                                if YR-Y<0:
 ##                                    DYR=-DYR
-
+----------------------------------------------------------------------------------------------------------------------
                             balle.x=X
                             balle.y=Y
                             balle2.x=XR
