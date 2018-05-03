@@ -293,7 +293,7 @@ class Jeu():
                                     k=2
                                 V1=sqrt(((DX)**2)+((DY)**2))
                                 V2=sqrt(((DXR)**2)+((DYR)**2))
-                                if sqrt(((X+DX-XR-DXR)**2)+((Y+DY-YR-DYR)**2))>2*RAYON:
+                                if sqrt(((X+(DX*0.1)-XR-DXR*0.1)**2)+((Y+(DY*0.1)-YR-DYR*0.1)**2))>2*RAYON:
                                     if V1>V2:
                                         if k==1:
                                             DXR=-DXR
