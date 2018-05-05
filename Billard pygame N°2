@@ -1,3 +1,6 @@
+from math import *
+import math
+import pygame
 H=500
 L=1000
 ##le personnage
@@ -6,11 +9,12 @@ class Personnage():
     def __init__(self,x,y,v,angle,ax,ay):
         self.x=x
         self.y=y
+        self.angle=angle
         self.cos=cos(angle)
         self.sin=sin(angle)
         self.vx=v*self.cos
         self.vy=v*self.sin
-        self.ff=1/10
+        self.ff=0.2
         self.ax=ax
         self.ay=ay
         self.dt=0.1
@@ -68,6 +72,7 @@ class Cercle():
         self.y=dy
         self.mechant=mechant
 
+
 ##un jeu est un personnage et des obstacles
 class Jeu():
 
@@ -106,39 +111,37 @@ class Jeu():
         self.Clic2=False
         self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
-        self.verification2=[0]
         self.obstacles=[]
-        self.obstacles+=[Obstacle(30,60,0,H-120,False)]
-        self.obstacles+=[Obstacle(L-30,60,L-30,H-120,False)]
-##        self.obstacles+=[Obstacle(60,30,L-120,0,False)]
-        self.obstacles+=[Obstacle(60,30,((L-120)/2)-35,0,False)]
-        self.obstacles+=[Obstacle((L/2)+35,30,((L-120)/2)-35,0,False)]
-##        self.obstacles+=[Obstacle(60,H-30,L-120,H-30,False)]
-        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-35,H-30,False)]
-        self.obstacles+=[Obstacle((L/2)+35,H-30,((L-120)/2)-35,H-30,False)]
+        self.obstacles+=[Obstacle(0,60,30,H-120,False)]
+        self.obstacles+=[Obstacle(L-30,60,30,H-120,False)]
+        self.obstacles+=[Obstacle(60,25,((L-120)/2)-30,0,False)]
+        self.obstacles+=[Obstacle((L/2)+25,30,((L-120)/2)-25,0,False)]
+        self.obstacles+=[Obstacle(60,H-25,((L-120)/2)-30,H-30,False)]
+        self.obstacles+=[Obstacle((L/2)+25,H-25,((L-120)/2)-30,H-30,False)]
         self.troue=[]
-        self.troue+=[Cercle(25,20,True)]
-        self.troue+=[Cercle(L/2,20,True)]
-        self.troue+=[Cercle(975,20,True)]
+        self.troue+=[Cercle(25,25,True)]
+        self.troue+=[Cercle(L/2,25,True)]
+        self.troue+=[Cercle(975,25,True)]
         self.troue+=[Cercle(25,475,True)]
         self.troue+=[Cercle(L/2,475,True)]
         self.troue+=[Cercle(975,475,True)]
 
+
     def evoluer(self):
-        global done
+        global done,H,L
 
         ##deplace
         self.pj.debout=False
+        for balle in self.Liste:
+            balle.evoluer()
+        ff=0.8
 
         ##deplace le pj
-        for évoluer in self.Liste:
-            évoluer.evoluer()
 
         ##test collision
         collision=False
         res=[]
         verification=[0]
-
         for balle in self.Liste:
             for obs in self.obstacles:
                 ff=0.5
@@ -173,27 +176,28 @@ class Jeu():
                                     balle.vx=-ff*balle.vx
 
             ##détection de la collision
-            Ok=1
+
             for obs in self.troue:
                 if (balle.contact(obs))==False:
                     if (obs.mechant):
                         balle.x=obs.x
                         balle.y=obs.y
                         balle.rayon=balle.rayon-1
+            Ok=True
             if balle.vx!=0 or balle.vy!=0:
+                ##La balle tiré dans balle dois être en mouvement
+                ##Il nous faut avoir une balle au moins en mouvement pour avoir collision
                 for balle2 in self.Liste:
+                    ## La balle tiré dans balle2 n'est pas obligé d'être en mouvement
                     condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                     if balle.x!=balle2.x or balle.y!=balle2.y:
                         for verifier in range(len(verification)):
+                            ##On vérifie si la condition a existé auparavant
                             if condition==verification[verifier]:
-                                Ok=0
+                                Ok=False
                         conditioncolision=(condition<=balle.rayon+balle2.rayon)
-                        ##Calcul des variables après la collision
-                        if conditioncolision and Ok==1:
-                            X=balle.x
-                            Y=balle.y
-                            XR=balle2.x
-                            YR=balle2.y
+                        ##Calcul des variables si il y a collision
+                        if conditioncolision and Ok:
                             X=balle.x
                             Y=balle.y
                             XR=balle2.x
@@ -205,26 +209,26 @@ class Jeu():
                             RAYON=balle.rayon
                             ##Calcul lorsque les balles bougent
                             if (DX!=0 or DY!=0) and (DYR==0 and DXR==0):
-                                ## Calcul de la position exact de la balle durant l'impact
-##                                if DX!=0:
-##                                    m=(DY/DX)
-##                                    p=Y-(m*X)
-##                                    c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
-##                                    a=1+(m**2)
-##                                    b=2*((m*(p-YR))-XR)
-##                                    delta=(b**2)-(4*c*a)
-##                                    if delta>=0:
-##                                        solution1=(((-b-(sqrt(delta))))/(2*a))
-##                                        solution2=(((-b+(sqrt(delta))))/(2*a))
-##                                        if DX<0:
-##                                            X=solution2
-##                                        if DX>0:
-##                                            X=solution1
-##                                        Y=(m*X)+p
+##                                 Calcul de la position exact de la balle durant l'impact
+                                if DX!=0:
+                                    m=(DY/DX)
+                                    p=Y-(m*X)
+                                    c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
+                                    a=1+(m**2)
+                                    b=2*((m*(p-YR))-XR)
+                                    delta=(b**2)-(4*c*a)
+                                    if delta>=0:
+                                        solution1=(((-b-(sqrt(delta))))/(2*a))
+                                        solution2=(((-b+(sqrt(delta))))/(2*a))
+                                        if DX<0:
+                                            X=solution2
+                                        if DX>0:
+                                            X=solution1
+                                        Y=(m*X)+p
                                         ##Calcul lorsque une balle bouge
-                                F=Al_Kashi(X,(X+DX),Y,(Y+DY),X,XR,Y,YR,XR,(X+DX),YR,(Y+DY))
+                                F=Al_Kashi(X,Y,X+DX,Y+DY,XR,YR)
                                 VitesseD=sqrt((DX**2) +(DY**2))
-                                angleV2=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                angleV2=Al_Kashi(X,Y,XR,YR,XR,Y)
                                 DXR=VitesseD*cos(F)*cos(angleV2)
                                 DYR=VitesseD*cos(F)*sin(angleV2)
                                 if XR<X and DXR>0:
@@ -239,17 +243,11 @@ class Jeu():
                                 XR=XR-DXR*0.1
                                 YR=YR-DYR*0.1
                                 condition=sqrt(((X-XR)**2)+((Y-YR)**2))
-                                angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
                                 if X>XR:
                                     angle1=math.pi-angle1
                                 if Y>YR:
                                     angle1=-angle1
-                                if YR<Y:
-                                    angle1=-angle1
-                                    if X>XR:
-                                        angle1=-math.pi-angle1
-                                elif X>XR:
-                                    angle1=math.pi-angle1
                                 angle2=angle1+math.pi
                                 distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
                                 distance_sin1=(abs((2*RAYON)-condition)/2)*sin(angle1)
@@ -260,17 +258,11 @@ class Jeu():
                                 XR=XR+distance_cos2
                                 YR=YR+distance_sin2
 
-                                angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
                                 if X>XR:
                                     angle1=math.pi-angle1
                                 if Y>YR:
                                     angle1=-angle1
-                                if YR<Y:
-                                    angle1=-angle1
-                                    if X>XR:
-                                        angle1=-math.pi-angle1
-                                elif X>XR:
-                                    angle1=math.pi-angle1
                                 while angle1>math.pi:
                                     angle1=angle1-2*math.pi
                                 while angle1<-math.pi:
@@ -315,16 +307,27 @@ class Jeu():
                                             DY=-DY
                                         if DYR<0:
                                             DYR=-DYR
+##                                    if V1>V2:
+##                                        if k==1:
+##                                            DXR=-DXR
+##                                        elif k==2:
+##                                            DYR=-DYR
+##                                    else:
+##                                        if k==1:
+##                                            DX=-DX
+##                                        elif k==2:
+##                                            DY=-DY
                                 if V1>V2:
-                                    DX=0.8*DX
-                                    DY=0.8*DY
-                                    DXR=1.2*DXR
-                                    DYR=1.2*DYR
+                                    DX=0.7*DX
+                                    DY=0.7*DY
+                                    DXR=1.1*DXR
+                                    DYR=1.1*DYR
                                 else:
-                                    DXR=0.8*DXR
-                                    DYR=0.8*DYR
-                                    DX=1.2*DX
-                                    DY=1.2*DY
+                                    DXR=0.7*DXR
+                                    DYR=0.7*DYR
+                                    DX=1.1*DX
+                                    DY=1.1*DY
+
                                 X=X+DX*0.1
                                 Y=Y+DY*0.1
                                 XR=XR+DXR*0.1
@@ -339,7 +342,6 @@ class Jeu():
                             balle2.vy=DYR
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
-                            self.verification2+=[condition]
             else:
                 for balle2 in self.Liste:
                     X=balle.x
@@ -348,7 +350,7 @@ class Jeu():
                     YR=balle2.y
                     condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                     if (balle2.vx==0 and balle2.vy==0) and condition<=balle2.rayon+balle.rayon:
-                        angle1=Al_Kashi(X,XR,Y,YR,X,XR,Y,Y,XR,XR,YR,Y)
+                        angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
                         if X>XR:
                             angle1=math.pi-angle1
                         if Y>YR:
@@ -358,16 +360,17 @@ class Jeu():
                             if X>XR:
                                 angle1=-math.pi-angle1
                         angle2=angle1+math.pi
-                        distance_cos1=(((balle2.rayon+balle.rayon+2)-condition)/2)*cos(angle1)
-                        distance_sin1=(((balle2.rayon+balle.rayon+2)-condition)/2)*sin(angle1)
-                        distance_cos2=(((balle2.rayon+balle.rayon+2)-condition)/2)*cos(angle2)
-                        distance_sin2=(((balle2.rayon+balle.rayon+2)-condition)/2)*sin(angle2)
+                        distance_cos1=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle1)
+                        distance_sin1=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle1)
+                        distance_cos2=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle2)
+                        distance_sin2=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle2)
                         balle.x=balle.x-distance_cos1
                         balle.y=balle.y-distance_sin1
                         balle2.x=balle2.x-distance_cos2
                         balle2.y=balle2.y-distance_sin2
 
         ## "Tir" permet de vérifier que toute les balles sont immobiles
+
         X=self.pj.x
         Y=self.pj.y
         D1=self.pj.rayon
@@ -401,6 +404,7 @@ class Jeu():
             ##joueur quitte
             if event.type == pygame.QUIT:
                 done = True
+
             if self.Tir:
                 if self.SansClic:
                     if event.type == pygame.MOUSEMOTION and event.buttons[0] != 1:
@@ -408,22 +412,16 @@ class Jeu():
                         self.y=event.pos[1]
                         x=self.x
                         y=self.y
-                        can_angle=Al_Kashi(X,x,Y,y,X,x,Y,Y,x,x,y,Y)
-                        ecart=(1/15)*math.pi
-                        ecart2=(1/140)*math.pi
+                        can_angle=Al_Kashi(X,Y,x,y,x,Y)
+                        if x<X:
+                            can_angle=math.pi-can_angle
                         if y<Y:
                             can_angle=-can_angle
                             ecart=-ecart
-                            if x<X:
-                                can_angle=-math.pi-can_angle
-                        elif x<X:
-                            can_angle=math.pi-can_angle
                         can_angle_1=can_angle-ecart
                         can_angle_2=can_angle+ecart
                         can_angle_3=can_angle-ecart2
                         can_angle_4=can_angle+ecart2
-                        D1=self.pj.rayon
-                        D2=400
                         self.can_angle=can_angle
                         self.x_1=X+D1*cos(can_angle_1)
                         self.y_1=Y+D1*sin(can_angle_1)
@@ -497,6 +495,8 @@ class Jeu():
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
 
+
+
     def dessiner(self,screen):
         WHITE = (0xFF, 0xFF, 0xFF)
         RED = (0xFD, 0x01, 0x01)
@@ -556,19 +556,17 @@ class Jeu():
             else:
                 balle.vx=0
                 balle.vy=0
-                balle.x=-balle.x
-                balle.y=-balle.y
             compteur+=1
-        if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H)):
+        if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H))  :
             self.pj=Personnage(750,250,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
-def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
+def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
     ##Calcul d'un angle à partir de 3 points
-    fA = sqrt((Xa1-Xa2)**2 + (Ya1-Ya2)**2)
-    fB = sqrt((Xb1-Xb2)**2 + (Yb1-Yb2)**2)
-    fC = sqrt((Xc1-Xc2)**2 + (Yc1-Yc2)**2)
+    fA = sqrt((Xa-Xb)**2 + (Ya-Yb)**2)
+    fB = sqrt((Xa-Xc)**2 + (Ya-Yc)**2)
+    fC = sqrt((Xb-Xc)**2 + (Yb-Yc)**2)
     if fA==0:
         fA=1/100
     if fB==0:
@@ -581,12 +579,7 @@ def Al_Kashi(Xa1,Xa2,Ya1,Ya2,Xb1,Xb2,Yb1,Yb2,Xc1,Xc2,Yc1,Yc2):
     QS=acos(E)
     return QS
 
-import pygame
-import math
-from math import *
-pygame.init()
 size = (L,H)
-##screen = pygame.display.set_mode((size),pygame.FULLSCREEN)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Jeu de 8")
 
@@ -594,7 +587,6 @@ pygame.display.set_caption("Jeu de 8")
 ##boolean boucle
 done = False
 ##creation du jeu
-
 jeu=Jeu()
 
 ##Musique en jeu
@@ -618,4 +610,5 @@ while not done:
     pygame.display.flip()
     ## --- attente
     clock.tick(60)
+
 pygame.quit()
