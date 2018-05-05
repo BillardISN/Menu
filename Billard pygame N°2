@@ -202,7 +202,7 @@ class Jeu():
                             DY=balle.vy
                             DXR=balle2.vx
                             DYR=balle2.vy
-                            RAYON=15
+                            RAYON=balle.rayon
                             ##Calcul lorsque les balles bougent
                             if (DX!=0 or DY!=0) and (DYR==0 and DXR==0):
                                 ## Calcul de la position exact de la balle durant l'impact
@@ -329,66 +329,6 @@ class Jeu():
                                 Y=Y+DY*0.1
                                 XR=XR+DXR*0.1
                                 YR=YR+DYR*0.1
---------------------------------------------------------------------------------------------------------------------------------
-                                ops1=True
-                                for verifier in range(len(self.verification2)):
-                                    if verifier+1<len(self.verification2):
-                                        if self.verification2[verifier]==self.verification2[verifier+1] and self.verification2[verifier]==condition and self.verification2[verifier]!=0:
-                                            ops1=False
-                                            self.verification2[verifier]=0
-                                            self.verification2[verifier+1]=0
-
-##                                angle1=Al_Kashi(X,X-DX,Y,Y-DY,X,X-DX,Y,Y,X-DX,X-DX,Y-DY,Y)
-##                                angle2=Al_Kashi(XR,XR-DXR,YR,YR-DYR,XR,XR-DXR,YR,YR,XR-DXR,XR-DXR,YR-DYR,YR)
-##
-##                                v1=sqrt((DX**2)+((DY)**2))
-##                                v2=sqrt((DXR**2)+((DYR)**2))
-##                                angle1_2=atan((v2/v1)*(sin(angle2)/cos(angle1)))
-##                                angle2_2=atan((v1/v2)*(sin(angle1)/cos(angle2)))
-##                                v1_2=sqrt(((v2*sin(angle2))**2)+((v1*cos(angle1))**2))
-##                                v2_2=sqrt(((v1*sin(angle1))**2)+((v2*cos(angle2))**2))
-##                                DX=v1_2*cos(angle1_2)
-##                                DY=v1_2*sin(angle1_2)
-##                                DXR=v2_2*cos(angle2_2)
-##                                DYR=v2_2*sin(angle2_2)
-                                if ops1:
-                                    DX1=DX
-                                    DY1=DY
-                                    DX=DXR
-                                    DY=DYR
-                                    DXR=DX1
-                                    DYR=DY1
-                                else:
-                                    v1=sqrt((DX**2)+(DY**2))
-                                    v2=sqrt((DXR**2)+(DYR**2))
-                                    if v1>v2:
-                                        DXR=-0.5*DX
-                                        DYR=-0.5*DY
-                                    else:
-                                        DX=-0.5*DXR
-                                        DY=-0.5*DYR
-                                    X=X+DX*0.1
-                                    Y=Y+DY*0.1
-                                    XR=XR+DXR*0.1
-                                    YR=YR+DYR*0.1
-##                                condX=(DX and DXR)
-##                                condY=(DY and DYR)
-##                                if (condX>0 or condX<0 ) and (condY>0 or condY<0):
-##                                    DXR=0
-##                                    DYR=0
-##                                    DX=0
-##                                    DY=0
-
-
-##                                if X-XR<0:
-##                                    DX=-DX
-##                                if Y-YR<0:
-##                                    DY=-DY
-##                                if XR-X<0:
-##                                    DXR=-DXR
-##                                if YR-Y<0:
-##                                    DYR=-DYR
-----------------------------------------------------------------------------------------------------------------------
                             balle.x=X
                             balle.y=Y
                             balle2.x=XR
@@ -427,7 +367,13 @@ class Jeu():
                         balle2.x=balle2.x-distance_cos2
                         balle2.y=balle2.y-distance_sin2
 
-        ## Tir permet de vérifier que toute les balles sont immobiles
+        ## "Tir" permet de vérifier que toute les balles sont immobiles
+        X=self.pj.x
+        Y=self.pj.y
+        D1=self.pj.rayon
+        D2=400
+        ecart=(1/15)*math.pi
+        ecart2=(1/140)*math.pi
         self.Tir=True
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
@@ -438,9 +384,15 @@ class Jeu():
                 self.SansClic=True
                 self.v=0
                 self.nmax=False
-
-        X=self.pj.x
-        Y=self.pj.y
+                self.x_1=X+D1*cos(ecart)
+                self.y_1=Y+D1*sin(ecart)
+                self.x_2=X+D1*cos(-ecart)
+                self.y_2=Y+D1*sin(-ecart)
+                self.x_3=X+D2*cos(-ecart2)
+                self.y_3=Y+D2*sin(-ecart2)
+                self.x_4=X+D2*cos(ecart2)
+                self.y_4=Y+D2*sin(ecart2)
+                self.can_angle=0
         v_can=2
         v_can2=25
 
