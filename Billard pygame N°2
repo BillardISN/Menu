@@ -19,7 +19,7 @@ class Personnage():
         self.ay=ay
         self.dt=0.1
         self.rayon=15
-
+        self.rayontroue=25
         self.mur=False
         self.debout=False
 
@@ -51,7 +51,7 @@ class Personnage():
         return collision
 
     def contact(self,obs):
-        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<25)
+        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<self.rayontroue)
         return contact
 
 
@@ -107,6 +107,7 @@ class Jeu():
         self.v=0
         self.can_angle=0
         self.n=0
+        self.rayontroue=25
         self.Clic=False
         self.Clic2=False
         self.SansClic=True
@@ -134,7 +135,6 @@ class Jeu():
         self.pj.debout=False
         for balle in self.Liste:
             balle.evoluer()
-        ff=0.8
 
         ##deplace le pj
 
@@ -378,6 +378,7 @@ class Jeu():
         ecart=(1/15)*math.pi
         ecart2=(1/140)*math.pi
         self.Tir=True
+        nerienfaire=False
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
                 self.Tir=False
@@ -387,6 +388,12 @@ class Jeu():
                 self.SansClic=True
                 self.v=0
                 self.nmax=False
+                nerienfaire=True
+                for obs in self.troue:
+                    if sqrt((obs.x-self.pj.x)**2+((obs.y-self.pj.y)**2))<=self.rayontroue:
+                        X=3*L/4
+                        Y=H/2
+                        D1=15
                 self.x_1=X+D1*cos(ecart)
                 self.y_1=Y+D1*sin(ecart)
                 self.x_2=X+D1*cos(-ecart)
@@ -520,13 +527,12 @@ class Jeu():
         pygame.draw.line(screen,WHITE,(L*(3/4),20),(L*(3/4),H-20))
         pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*math.pi),(1/2*math.pi))
         def DN(Y):
-            D=25
             X=25
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
             X=975
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
             X=L/2
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),D)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
         def Bord(D,X1,X2):
             pygame.draw.polygon(screen,GREENH,((X1,D),(X2,D+20),(X2,H-D-20),(X1,H-D)))
         def Bord2(D,X1,X2):
@@ -558,7 +564,7 @@ class Jeu():
                 balle.vy=0
             compteur+=1
         if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H))  :
-            self.pj=Personnage(750,250,0,1,0,0)
+            self.pj=Personnage(3*L/4,H/2,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
