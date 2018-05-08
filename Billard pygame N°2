@@ -113,12 +113,12 @@ class Jeu():
         self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
-        self.obstacles+=[Obstacle(0,60,30,H-120,False)]
-        self.obstacles+=[Obstacle(L-30,60,30,H-120,False)]
-        self.obstacles+=[Obstacle(60,25,((L-120)/2)-30,0,False)]
-        self.obstacles+=[Obstacle((L/2)+25,30,((L-120)/2)-25,0,False)]
-        self.obstacles+=[Obstacle(60,H-25,((L-120)/2)-30,H-30,False)]
-        self.obstacles+=[Obstacle((L/2)+25,H-25,((L-120)/2)-30,H-30,False)]
+        self.obstacles+=[Obstacle(0,60,30,H-120,False)] ##Obstacle verticale gauche
+        self.obstacles+=[Obstacle(L-30,60,30,H-120,False)] ##Obstacle verticale droite
+        self.obstacles+=[Obstacle(60,30,((L-120)/2)-30,0,False)] ##Obstacle horizontale haut, gauche
+        self.obstacles+=[Obstacle((L/2)+30,30,((L-120)/2)-30,0,False)] ##Obstacle horizontale haut, droite
+        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-30,H-30,False)] ##Obstacle horizontale bas, gauche
+        self.obstacles+=[Obstacle((L/2)+30,H-30,((L-120)/2)-30,H-30,False)] ##Obstacle horizontale bas, droite
         self.troue=[]
         self.troue+=[Cercle(25,25,True)]
         self.troue+=[Cercle(L/2,25,True)]
@@ -238,25 +238,25 @@ class Jeu():
                                 DX=(DX-DXR)
                                 DY=(DY-DYR)
                             else:
-                                X=X-DX*0.1
-                                Y=Y-DY*0.1
-                                XR=XR-DXR*0.1
-                                YR=YR-DYR*0.1
-                                condition=sqrt(((X-XR)**2)+((Y-YR)**2))
-                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
-                                if X>XR:
-                                    angle1=math.pi-angle1
-                                if Y>YR:
-                                    angle1=-angle1
-                                angle2=angle1+math.pi
-                                distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
-                                distance_sin1=(abs((2*RAYON)-condition)/2)*sin(angle1)
-                                distance_cos2=(abs((2*RAYON)-condition)/2)*cos(angle2)
-                                distance_sin2=(abs((2*RAYON)-condition)/2)*sin(angle2)
-                                X=X+distance_cos1
-                                Y=Y+distance_sin1
-                                XR=XR+distance_cos2
-                                YR=YR+distance_sin2
+##                                X=X-DX*0.1
+##                                Y=Y-DY*0.1
+##                                XR=XR-DXR*0.1
+##                                YR=YR-DYR*0.1
+##                                condition=sqrt(((X-XR)**2)+((Y-YR)**2))
+##                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
+##                                if X>XR:
+##                                    angle1=math.pi-angle1
+##                                if Y>YR:
+##                                    angle1=-angle1
+##                                angle2=angle1+math.pi
+##                                distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
+##                                distance_sin1=(abs((2*RAYON)-condition)/2)*sin(angle1)
+##                                distance_cos2=(abs((2*RAYON)-condition)/2)*cos(angle2)
+##                                distance_sin2=(abs((2*RAYON)-condition)/2)*sin(angle2)
+##                                X=X+distance_cos1
+##                                Y=Y+distance_sin1
+##                                XR=XR+distance_cos2
+##                                YR=YR+distance_sin2
 
                                 angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
                                 if X>XR:
@@ -307,16 +307,7 @@ class Jeu():
                                             DY=-DY
                                         if DYR<0:
                                             DYR=-DYR
-##                                    if V1>V2:
-##                                        if k==1:
-##                                            DXR=-DXR
-##                                        elif k==2:
-##                                            DYR=-DYR
-##                                    else:
-##                                        if k==1:
-##                                            DX=-DX
-##                                        elif k==2:
-##                                            DY=-DY
+
                                 if V1>V2:
                                     DX=0.7*DX
                                     DY=0.7*DY
@@ -328,10 +319,10 @@ class Jeu():
                                     DX=1.1*DX
                                     DY=1.1*DY
 
-                                X=X+DX*0.1
-                                Y=Y+DY*0.1
-                                XR=XR+DXR*0.1
-                                YR=YR+DYR*0.1
+##                                X=X+DX*0.1
+##                                Y=Y+DY*0.1
+##                                XR=XR+DXR*0.1
+##                                YR=YR+DYR*0.1
                             balle.x=X
                             balle.y=Y
                             balle2.x=XR
@@ -360,10 +351,10 @@ class Jeu():
                             if X>XR:
                                 angle1=-math.pi-angle1
                         angle2=angle1+math.pi
-                        distance_cos1=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle1)
-                        distance_sin1=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle1)
-                        distance_cos2=(((balle2.rayon+balle.rayon)-condition)/2)*cos(angle2)
-                        distance_sin2=(((balle2.rayon+balle.rayon)-condition)/2)*sin(angle2)
+                        distance_cos1=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle1)
+                        distance_sin1=(((balle2.rayon+balle.rayon+4)-condition)/2)*sin(angle1)
+                        distance_cos2=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle2)
+                        distance_sin2=(((balle2.rayon+balle.rayon+4)-condition)/2)*sin(angle2)
                         balle.x=balle.x-distance_cos1
                         balle.y=balle.y-distance_sin1
                         balle2.x=balle2.x-distance_cos2
