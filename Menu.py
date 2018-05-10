@@ -1,8 +1,7 @@
 from tkinter import*
 from Billard import*
 from Français import*
-from Box import*
-from Box2 import*
+
 import pygame
 
 pygame.init()
@@ -43,20 +42,9 @@ def Billard_Français():
     fen.destroy()
     Français()
 
-def Jeu8():
-    fen.destroy()
-    Jeu_Du_8()
-    son.stop()
-
-def Jeu9():
-    fen.destroy()
-    Jeu_du_9()
-    son.stop()
-
 def Jeu_Anglais():
     fen.destroy()
     Anglais()
-    son.stop
 
 def Retour():
     fen.destroy()
