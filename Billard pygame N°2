@@ -200,53 +200,53 @@ class Jeu():
                         if conditioncolision and Ok:
                             X=balle.x
                             Y=balle.y
-                            XR=balle2.x
-                            YR=balle2.y
-                            DX=balle.vx
-                            DY=balle.vy
-                            DXR=balle2.vx
-                            DYR=balle2.vy
+                            X2=balle2.x
+                            Y2=balle2.y
+                            Vx1=balle.vx
+                            Vy1=balle.vy
+                            Vx2=balle2.vx
+                            Vy2=balle2.vy
                             RAYON=balle.rayon
                             ##Calcul lorsque les balles bougent
-                            if (DX!=0 or DY!=0) and (DYR==0 and DXR==0):
+                            if (Vx1!=0 or Vy1!=0) and (Vx2==0 and Vy2==0):
 ##                                 Calcul de la position exact de la balle durant l'impact
-                                if DX!=0:
-                                    m=(DY/DX)
+                                if Vx1!=0:
+                                    m=(Vy1/Vx1)
                                     p=Y-(m*X)
-                                    c=-(((2*RAYON)**2)-(XR**2)-(YR**2)+(2*p*YR)-((p)**2))
+                                    c=-(((2*RAYON)**2)-(X2**2)-(Y2**2)+(2*p*Y2)-((p)**2))
                                     a=1+(m**2)
-                                    b=2*((m*(p-YR))-XR)
+                                    b=2*((m*(p-Y2))-X2)
                                     delta=(b**2)-(4*c*a)
                                     if delta>=0:
                                         solution1=(((-b-(sqrt(delta))))/(2*a))
                                         solution2=(((-b+(sqrt(delta))))/(2*a))
-                                        if DX<0:
+                                        if Vx1<0:
                                             X=solution2
-                                        if DX>0:
+                                        if Vx1>0:
                                             X=solution1
                                         Y=(m*X)+p
                                         ##Calcul lorsque une balle bouge
-                                F=Al_Kashi(X,Y,X+DX,Y+DY,XR,YR)
-                                VitesseD=sqrt((DX**2) +(DY**2))
-                                angleV2=Al_Kashi(X,Y,XR,YR,XR,Y)
-                                DXR=VitesseD*cos(F)*cos(angleV2)
-                                DYR=VitesseD*cos(F)*sin(angleV2)
-                                if XR<X and DXR>0:
-                                    DXR=-DXR
-                                if YR<Y and DYR>0:
-                                    DYR=-DYR
-                                DX=(DX-DXR)
-                                DY=(DY-DYR)
+                                F=Al_Kashi(X,Y,X+Vx1,Y+Vy1,X2,Y2)
+                                VitesseD=sqrt((Vx1**2)+(Vy1**2))
+                                angleV2=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                                Vx2=VitesseD*cos(F)*cos(angleV2)
+                                Vy2=VitesseD*cos(F)*sin(angleV2)
+                                if X2<X and Vx2>0:
+                                    Vx2=-Vx2
+                                if Y2<Y and Vy2>0:
+                                    Vy2=-Vy2
+                                Vx1=(Vx1-Vx2)
+                                Vy1=(Vy1-Vy2)
                             else:
-##                                X=X-DX*0.1
-##                                Y=Y-DY*0.1
-##                                XR=XR-DXR*0.1
-##                                YR=YR-DYR*0.1
-##                                condition=sqrt(((X-XR)**2)+((Y-YR)**2))
-##                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
-##                                if X>XR:
+##                                X=X-Vx1*0.1
+##                                Y=Y-Vy1*0.1
+##                                X2=X2-Vx2*0.1
+##                                Y2=Y2-Vy2*0.1
+##                                condition=sqrt(((X-X2)**2)+((Y-Y2)**2))
+##                                angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
+##                                if X>X2:
 ##                                    angle1=math.pi-angle1
-##                                if Y>YR:
+##                                if Y>Y2:
 ##                                    angle1=-angle1
 ##                                angle2=angle1+math.pi
 ##                                distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
@@ -255,100 +255,100 @@ class Jeu():
 ##                                distance_sin2=(abs((2*RAYON)-condition)/2)*sin(angle2)
 ##                                X=X+distance_cos1
 ##                                Y=Y+distance_sin1
-##                                XR=XR+distance_cos2
-##                                YR=YR+distance_sin2
+##                                X2=X2+distance_cos2
+##                                Y2=Y2+distance_sin2
 
-                                angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
-                                if X>XR:
+                                angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                                if X>X2:
                                     angle1=math.pi-angle1
-                                if Y>YR:
+                                if Y>Y2:
                                     angle1=-angle1
                                 while angle1>math.pi:
                                     angle1=angle1-2*math.pi
                                 while angle1<-math.pi:
                                     angle1=angle1+2*math.pi
                                 if -math.pi/4<=angle1<math.pi/4:
-                                    DX=-DX
-                                    DXR=-DXR
+                                    Vx1=-Vx1
+                                    Vx2=-Vx2
                                     k=1
                                 if math.pi/4<=angle1<3*math.pi/4:
-                                    DY=-DY
-                                    DYR=-DYR
+                                    Vy1=-Vy1
+                                    Vy2=-Vy2
                                     k=2
                                 if -math.pi<=angle1<-3*math.pi/4 or 3*math.pi/4<=angle1<=math.pi:
-                                    DX=-DX
-                                    DXR=-DXR
+                                    Vx1=-Vx1
+                                    Vx2=-Vx2
                                     k=1
                                 if -3*math.pi/4<=angle1<-math.pi/4:
-                                    DY=-DY
-                                    DYR=-DYR
+                                    Vy1=-Vy1
+                                    Vy2=-Vy2
                                     k=2
-                                V1=sqrt(((DX)**2)+((DY)**2))
-                                V2=sqrt(((DXR)**2)+((DYR)**2))
+                                V1=sqrt(((Vx1)**2)+((Vy1)**2))
+                                V2=sqrt(((Vx2)**2)+((Vy2)**2))
                                 if k==1:
-                                    if X>XR:
-                                        if DX<0:
-                                            DX=-DX
-                                        if DXR>0:
-                                            DXR=-DXR
+                                    if X>X2:
+                                        if Vx1<0:
+                                            Vx1=-Vx1
+                                        if Vx2>0:
+                                            Vx2=-Vx2
                                     else:
-                                        if DX>0:
-                                            DX=-DX
-                                        if DXR<0:
-                                            DXR=-DXR
+                                        if Vx1>0:
+                                            Vx1=-Vx1
+                                        if Vx2<0:
+                                            Vx2=-Vx2
                                 if k==2:
-                                    if Y>YR:
-                                        if DY<0:
-                                            DY=-DY
-                                        if DYR>0:
-                                            DYR=-DYR
+                                    if Y>Y2:
+                                        if Vy1<0:
+                                            Vy1=-Vy1
+                                        if Vy2>0:
+                                            Vy2=-Vy2
                                     else:
-                                        if DY>0:
-                                            DY=-DY
-                                        if DYR<0:
-                                            DYR=-DYR
+                                        if Vy1>0:
+                                            Vy1=-Vy1
+                                        if Vy2<0:
+                                            Vy2=-Vy2
 
                                 if V1>V2:
-                                    DX=0.7*DX
-                                    DY=0.7*DY
-                                    DXR=1.1*DXR
-                                    DYR=1.1*DYR
+                                    Vx1=0.7*Vx1
+                                    Vy1=0.7*Vy1
+                                    Vx2=1.1*Vx2
+                                    Vy2=1.1*Vy2
                                 else:
-                                    DXR=0.7*DXR
-                                    DYR=0.7*DYR
-                                    DX=1.1*DX
-                                    DY=1.1*DY
+                                    Vx2=0.7*Vx2
+                                    Vy2=0.7*Vy2
+                                    Vx1=1.1*Vx1
+                                    Vy1=1.1*Vy1
 
-##                                X=X+DX*0.1
-##                                Y=Y+DY*0.1
-##                                XR=XR+DXR*0.1
-##                                YR=YR+DYR*0.1
+##                                X=X+Vx1*0.1
+##                                Y=Y+Vy1*0.1
+##                                X2=X2+Vx2*0.1
+##                                Y2=Y2+Vy2*0.1
                             balle.x=X
                             balle.y=Y
-                            balle2.x=XR
-                            balle2.y=YR
-                            balle.vx=DX
-                            balle.vy=DY
-                            balle2.vx=DXR
-                            balle2.vy=DYR
+                            balle2.x=X2
+                            balle2.y=Y2
+                            balle.vx=Vx1
+                            balle.vy=Vy1
+                            balle2.vx=Vx2
+                            balle2.vy=Vy2
                             condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                             verification+=[condition]
             else:
                 for balle2 in self.Liste:
                     X=balle.x
                     Y=balle.y
-                    XR=balle2.x
-                    YR=balle2.y
+                    X2=balle2.x
+                    Y2=balle2.y
                     condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
                     if (balle2.vx==0 and balle2.vy==0) and condition<=balle2.rayon+balle.rayon:
-                        angle1=Al_Kashi(X,Y,XR,YR,XR,Y)
-                        if X>XR:
+                        angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                        if X>X2:
                             angle1=math.pi-angle1
-                        if Y>YR:
+                        if Y>Y2:
                             angle1=-angle1
-                        if YR<Y:
+                        if Y2<Y:
                             angle1=-angle1
-                            if X>XR:
+                            if X>X2:
                                 angle1=-math.pi-angle1
                         angle2=angle1+math.pi
                         distance_cos1=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle1)
@@ -359,6 +359,7 @@ class Jeu():
                         balle.y=balle.y-distance_sin1
                         balle2.x=balle2.x-distance_cos2
                         balle2.y=balle2.y-distance_sin2
+
 
         ## "Tir" permet de vérifier que toute les balles sont immobiles
 
@@ -408,7 +409,7 @@ class Jeu():
                         self.y=event.pos[1]
                         x=self.x
                         y=self.y
-                        can_angle=Al_Kashi(X,Y,x,y,x,Y)
+                        can_angle=Al_Kashi(X,Y,x,y,x,Y)+math.pi
                         if x<X:
                             can_angle=math.pi-can_angle
                         if y<Y:
@@ -490,6 +491,7 @@ class Jeu():
                 self.Clic2=False
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
+                print(self.can_angle-math.pi)
 
 
 
