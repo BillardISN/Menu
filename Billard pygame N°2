@@ -575,37 +575,43 @@ def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
         E=-1
     QS=acos(E)
     return QS
+    
+def Anglais():
+    global done
 
-size = (L,H)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Jeu de 8")
+    pygame.init
 
-
-##boolean boucle
-done = False
-##creation du jeu
-jeu=Jeu()
-
-##Musique en jeu
-##music = pygame.mixer.music.load("BirdBrainz_II.wav")
-##pygame.mixer.music.play()
-
-##gestion horloge
-clock = pygame.time.Clock()
-## -------- boucle principale
-while not done:
+    size = (L,H)
 
 
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption("Jeu de 8")
 
-    ## --- evolution du jeu
-    jeu.evoluer()
+    ##boolean boucle
+    done = False
+    ##creation du jeu
+    jeu=Jeu()
 
-    ## --- affichage
-    jeu.dessiner(screen)
+    ##Musique en jeu
+    music = pygame.mixer.music.load("BirdBrainz_II.wav")
+    pygame.mixer.music.play()
 
-    ## --- mise a jour graphique
-    pygame.display.flip()
-    ## --- attente
-    clock.tick(60)
+    ##gestion horloge
+    clock = pygame.time.Clock()
+    ## -------- boucle principale
+    while not done:
 
-pygame.quit()
+
+
+        ## --- evolution du jeu
+        jeu.evoluer()
+
+        ## --- affichage
+        jeu.dessiner(screen)
+
+        ## --- mise a jour graphique
+        pygame.display.flip()
+        ## --- attente
+        clock.tick(60)
+
+    pygame.quit()
