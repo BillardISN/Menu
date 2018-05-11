@@ -1,10 +1,16 @@
+##Importation des bibliothèques
 from math import *
 import pygame
+
+##définition de la hauteur et de la largeur de la fenetre
 H=500
 L=1000
-##le personnage
+
+
+##Définition d'une classe boule qui permet de leur donner les propriétés adéquats
 class Boule():
 
+##On initialise les variables utilisées par la suite
     def __init__(self,x,y,v,angle,ax,ay):
         self.x=x
         self.y=y
@@ -22,6 +28,7 @@ class Boule():
         self.mur=False
         self.debout=False
 
+##définiton du déplacement des boules
     def evoluer(self):
         self.vx=self.vx+self.ax*self.dt
         self.vy=self.vy+self.ay*self.dt
@@ -37,10 +44,7 @@ class Boule():
         self.x=self.x+self.vx*self.dt
         self.y=self.y+self.vy*self.dt
 
-
-    def afficher(self):
-        print("(x,y): "+str(self.x)+","+str(self.y)+"  vx,vy: "+str(self.vx)+","+str(self.vy))
-
+##Test des collisions entre boules et bords (Contact permet de detecter une collision et collision donne le type de collision)
     def collision(self,obs):
         haut=(self.y+self.rayon<obs.y)
         bas=(self.y-self.rayon>obs.y+obs.ly)
@@ -53,8 +57,7 @@ class Boule():
         contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<self.rayontroue)
         return contact
 
-
-##un obstacle est betement un carre
+##On initialise les bords
 class Obstacle():
 
     def __init__(self,dx,dy,dx1,dy1):
@@ -63,6 +66,7 @@ class Obstacle():
         self.lx=dx1
         self.ly=dy1
 
+##On initialise les trous
 class Cercle():
 
     def __init__(self,dx,dy):
@@ -70,9 +74,10 @@ class Cercle():
         self.y=dy
 
 
-##un jeu est un personnage et des obstacles
+##La classe Jeu fait évoluer les variables, dessine et permet le mouvement des boules en dessinant au cours du temps
 class Jeu():
 
+##On initialise les variables
     def __init__(self):
 
         self.pj=Boule(750,250,0,1,0,0)
@@ -125,7 +130,7 @@ class Jeu():
         self.troue+=[Cercle(L/2,475)]
         self.troue+=[Cercle(975,475)]
 
-
+##La def évoluer permet de faire fonctionner les variables
     def evoluer(self):
         global done,H,L
 
@@ -486,7 +491,7 @@ class Jeu():
                 self.pj.vy=self.vy
 
 
-
+##Cette def permet d'afficher à l'écran les objets (boules, bordures, ...)
     def dessiner(self,screen):
         WHITE = (0xFF, 0xFF, 0xFF)
         RED = (0xFD, 0x01, 0x01)
