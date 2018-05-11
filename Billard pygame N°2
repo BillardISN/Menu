@@ -4,7 +4,7 @@ import pygame
 H=500
 L=1000
 ##le personnage
-class Personnage():
+class Boule():
 
     def __init__(self,x,y,v,angle,ax,ay):
         self.x=x
@@ -58,41 +58,40 @@ class Personnage():
 ##un obstacle est betement un carre
 class Obstacle():
 
-    def __init__(self,dx,dy,dx1,dy1,mechant):
+    def __init__(self,dx,dy,dx1,dy1):
         self.x=dx
         self.y=dy
         self.lx=dx1
         self.ly=dy1
-        self.mechant=mechant
 
 class Cercle():
 
-    def __init__(self,dx,dy,mechant):
+    def __init__(self,dx,dy):
         self.x=dx
         self.y=dy
-        self.mechant=mechant
 
 
 ##un jeu est un personnage et des obstacles
 class Jeu():
 
     def __init__(self):
-        self.pj=Personnage(750,250,0,1,0,0)
-        self.ba=Personnage(175,250,0,0,0,0)
-        self.bb=Personnage(240,252,0,0,0,0)
-        self.bc=Personnage(207,267,0,0,0,0)
-        self.bd=Personnage(143,300,0,0,0,0)
-        self.be=Personnage(175,218,0,0,0,0)
-        self.bf=Personnage(143,233,0,0,0,0)
-        self.bg=Personnage(110,250,0,0,0,0)
-        self.bh=Personnage(110,185,0,0,0,0)
-        self.bi=Personnage(207,233,0,0,0,0)
-        self.bj=Personnage(175,282,0,0,0,0)
-        self.bk=Personnage(110,315,0,0,0,0)
-        self.bl=Personnage(143,200,0,0,0,0)
-        self.bm=Personnage(110,218,0,0,0,0)
-        self.bn=Personnage(143,267,0,0,0,0)
-        self.bo=Personnage(110,282,0,0,0,0)
+
+        self.pj=Boule(750,250,0,1,0,0)
+        self.ba=Boule(175,250,0,0,0,0)
+        self.bb=Boule(240,252,0,0,0,0)
+        self.bc=Boule(207,267,0,0,0,0)
+        self.bd=Boule(143,300,0,0,0,0)
+        self.be=Boule(175,218,0,0,0,0)
+        self.bf=Boule(143,233,0,0,0,0)
+        self.bg=Boule(110,250,0,0,0,0)
+        self.bh=Boule(110,185,0,0,0,0)
+        self.bi=Boule(207,233,0,0,0,0)
+        self.bj=Boule(175,282,0,0,0,0)
+        self.bk=Boule(110,315,0,0,0,0)
+        self.bl=Boule(143,200,0,0,0,0)
+        self.bm=Boule(110,218,0,0,0,0)
+        self.bn=Boule(143,267,0,0,0,0)
+        self.bo=Boule(110,282,0,0,0,0)
         self.nmax=False
         self.vx=0
         self.vy=0
@@ -113,19 +112,19 @@ class Jeu():
         self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
-        self.obstacles+=[Obstacle(0,60,30,H-120,False)] ##Obstacle verticale gauche
-        self.obstacles+=[Obstacle(L-30,60,30,H-120,False)] ##Obstacle verticale droite
-        self.obstacles+=[Obstacle(60,30,((L-120)/2)-30,0,False)] ##Obstacle horizontale haut, gauche
-        self.obstacles+=[Obstacle((L/2)+30,30,((L-120)/2)-30,0,False)] ##Obstacle horizontale haut, droite
-        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-30,H-30,False)] ##Obstacle horizontale bas, gauche
-        self.obstacles+=[Obstacle((L/2)+30,H-30,((L-120)/2)-30,H-30,False)] ##Obstacle horizontale bas, droite
+        self.obstacles+=[Obstacle(0,60,30,H-120)] ##Obstacle verticale gauche
+        self.obstacles+=[Obstacle(L-30,60,30,H-120)] ##Obstacle verticale droite
+        self.obstacles+=[Obstacle(60,30,((L-120)/2)-30,0)] ##Obstacle horizontale haut, gauche
+        self.obstacles+=[Obstacle((L/2)+30,30,((L-120)/2)-30,0)] ##Obstacle horizontale haut, droite
+        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-30,H-30)] ##Obstacle horizontale bas, gauche
+        self.obstacles+=[Obstacle((L/2)+30,H-30,((L-120)/2)-30,H-30)] ##Obstacle horizontale bas, droite
         self.troue=[]
-        self.troue+=[Cercle(25,25,True)]
-        self.troue+=[Cercle(L/2,25,True)]
-        self.troue+=[Cercle(975,25,True)]
-        self.troue+=[Cercle(25,475,True)]
-        self.troue+=[Cercle(L/2,475,True)]
-        self.troue+=[Cercle(975,475,True)]
+        self.troue+=[Cercle(25,25)]
+        self.troue+=[Cercle(L/2,25)]
+        self.troue+=[Cercle(975,25)]
+        self.troue+=[Cercle(25,475)]
+        self.troue+=[Cercle(L/2,475)]
+        self.troue+=[Cercle(975,475)]
 
 
     def evoluer(self):
@@ -146,43 +145,38 @@ class Jeu():
             for obs in self.obstacles:
                 ff=0.5
                 if (balle.collision(obs)):
-                    ##si l'obstacle est mechant
-                    if (obs.mechant):
-                        balle=Personnage()
+                    if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y):
+                        ##obstacle en bas
+                        db=abs(balle.y+balle.rayon-obs.y)
+                        balle.y += -db
+                        balle.vy=-ff*balle.vy
+                        ##le personnage est debout
+                        balle.debout=True
                     else:
-                        if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y):
-                            ##obstacle en bas
-                            db=abs(balle.y+balle.rayon-obs.y)
-                            balle.y += -db
+                        if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
+                            ##obstacle en haut
+                            db=abs(balle.y-balle.rayon-(obs.y+obs.ly))
+                            balle.y += db
                             balle.vy=-ff*balle.vy
-                            ##le personnage est debout
-                            balle.debout=True
                         else:
-                            if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
-                                ##obstacle en haut
-                                db=abs(balle.y-balle.rayon-(obs.y+obs.ly))
-                                balle.y += db
-                                balle.vy=-ff*balle.vy
-                            else:
-                                if(balle.x<obs.x):
-                                    ##obstacle a droite
-                                    db=abs(balle.x+balle.rayon-obs.x)
-                                    balle.x += -db
-                                    balle.vx=-ff*balle.vx
-                                if(balle.x>obs.x+obs.lx):
-                                    ##obstacle en gauche
-                                    db=abs(balle.x-balle.rayon-(obs.x+obs.lx))
-                                    balle.x += db
-                                    balle.vx=-ff*balle.vx
+                            if(balle.x<obs.x):
+                                ##obstacle a droite
+                                db=abs(balle.x+balle.rayon-obs.x)
+                                balle.x += -db
+                                balle.vx=-ff*balle.vx
+                            if(balle.x>obs.x+obs.lx):
+                                ##obstacle en gauche
+                                db=abs(balle.x-balle.rayon-(obs.x+obs.lx))
+                                balle.x += db
+                                balle.vx=-ff*balle.vx
 
             ##détection de la collision
 
             for obs in self.troue:
                 if (balle.contact(obs))==False:
-                    if (obs.mechant):
-                        balle.x=obs.x
-                        balle.y=obs.y
-                        balle.rayon=balle.rayon-1
+                    balle.x=obs.x
+                    balle.y=obs.y
+                    balle.rayon=balle.rayon-1
             Ok=True
             if balle.vx!=0 or balle.vy!=0:
                 ##La balle tiré dans balle dois être en mouvement
@@ -491,7 +485,6 @@ class Jeu():
                 self.Clic2=False
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
-                print(self.can_angle-math.pi)
 
 
 
@@ -555,7 +548,7 @@ class Jeu():
                 balle.vy=0
             compteur+=1
         if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H))  :
-            self.pj=Personnage(3*L/4,H/2,0,1,0,0)
+            self.pj=Boule(3*L/4,H/2,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
@@ -575,43 +568,37 @@ def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
         E=-1
     QS=acos(E)
     return QS
-    
-def Anglais():
-    global done
 
-    pygame.init
-
-    size = (L,H)
+size = (L,H)
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Jeu de 8")
 
 
-    screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Jeu de 8")
+##boolean boucle
+done = False
+##creation du jeu
+jeu=Jeu()
 
-    ##boolean boucle
-    done = False
-    ##creation du jeu
-    jeu=Jeu()
+##Musique en jeu
+##music = pygame.mixer.music.load("BirdBrainz_II.wav")
+##pygame.mixer.music.play()
 
-    ##Musique en jeu
-    music = pygame.mixer.music.load("BirdBrainz_II.wav")
-    pygame.mixer.music.play()
-
-    ##gestion horloge
-    clock = pygame.time.Clock()
-    ## -------- boucle principale
-    while not done:
+##gestion horloge
+clock = pygame.time.Clock()
+## -------- boucle principale
+while not done:
 
 
 
-        ## --- evolution du jeu
-        jeu.evoluer()
+    ## --- evolution du jeu
+    jeu.evoluer()
 
-        ## --- affichage
-        jeu.dessiner(screen)
+    ## --- affichage
+    jeu.dessiner(screen)
 
-        ## --- mise a jour graphique
-        pygame.display.flip()
-        ## --- attente
-        clock.tick(60)
+    ## --- mise a jour graphique
+    pygame.display.flip()
+    ## --- attente
+    clock.tick(60)
 
-    pygame.quit()
+pygame.quit()
