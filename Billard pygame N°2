@@ -96,6 +96,7 @@ class Jeu():
         self.bm=Boule(110,218,0,0,0,0)
         self.bn=Boule(143,267,0,0,0,0)
         self.bo=Boule(110,282,0,0,0,0)
+        self.Clicj1=True
         self.nmax=False
         self.passe=True
         self.vx=0
@@ -444,6 +445,7 @@ class Jeu():
                         self.vy=-v*sin(self.can_angle)
                         self.Clic2=True
                         self.Clic=False
+                        self.Clicj1=False
         if self.Clic:
             if not(self.nmax):
                 if self.n<=150:
@@ -560,6 +562,9 @@ class Jeu():
             self.passe=False
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
+        if self.Clicj1:
+            J1 = pygame.image.load("Joueur 1.png").convert_alpha()
+            screen.blit(J1, (445,245))
 def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
     ##Calcul d'un angle à partir de 3 points
     fA = sqrt((Xa-Xb)**2 + (Ya-Yb)**2)
@@ -579,6 +584,7 @@ def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
 
 size = (L,H)
 screen = pygame.display.set_mode(size)
+
 pygame.display.set_caption("Jeu de 8")
 
 
