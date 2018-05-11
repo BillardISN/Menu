@@ -97,8 +97,12 @@ class Jeu():
         self.bn=Boule(143,267,0,0,0,0)
         self.bo=Boule(110,282,0,0,0,0)
         self.Clicj1=True
+        self.Clicj2=False
         self.nmax=False
         self.passe=True
+        self.relais=False
+        self.relais2=False
+        self.relais3=False
         self.vx=0
         self.vy=0
         self.x_1=0
@@ -378,6 +382,7 @@ class Jeu():
                 self.Clic2=False
                 self.SansClic=True
                 self.v=0
+                self.relais=True
                 self.nmax=False
                 for obs in self.troue:
                     if sqrt((obs.x-self.pj.x)**2+((obs.y-self.pj.y)**2))<=self.rayontroue:
@@ -393,6 +398,14 @@ class Jeu():
                 self.x_4=X+D2*cos(ecart2)
                 self.y_4=Y+D2*sin(ecart2)
                 self.can_angle=0
+        if self.Tir and self.relais:
+            if self.relais2:
+                self.Clicj2=not(self.Clicj2)
+                self.relais2=False
+            if self.relais3:
+                self.Clicj1=not(self.Clicj1)
+                self.relais3=False
+            self.relais=False
         v_can=2
         v_can2=25
 
@@ -445,7 +458,12 @@ class Jeu():
                         self.vy=-v*sin(self.can_angle)
                         self.Clic2=True
                         self.Clic=False
-                        self.Clicj1=False
+                        if not(self.Clicj2):
+                            self.Clicj1=False
+                            self.relais2=True
+                        if not(self.Clicj1) and self.Clicj2:
+                            self.Clicj2=False
+                            self.relais3=True
         if self.Clic:
             if not(self.nmax):
                 if self.n<=150:
@@ -565,6 +583,9 @@ class Jeu():
         if self.Clicj1:
             J1 = pygame.image.load("Joueur 1.png").convert_alpha()
             screen.blit(J1, (445,245))
+        if self.Clicj2:
+            J2 = pygame.image.load("Joueur 2.png").convert_alpha()
+            screen.blit(J2, (445,245))
 def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
     ##Calcul d'un angle à partir de 3 points
     fA = sqrt((Xa-Xb)**2 + (Ya-Yb)**2)
