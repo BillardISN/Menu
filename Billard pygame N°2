@@ -122,12 +122,25 @@ class Jeu():
         self.SansClic=True
         self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
         self.obstacles=[]
-        self.obstacles+=[Obstacle(0,60,30,H-120)] ##Obstacle verticale gauche
-        self.obstacles+=[Obstacle(L-30,60,30,H-120)] ##Obstacle verticale droite
-        self.obstacles+=[Obstacle(60,30,((L-120)/2)-30,0)] ##Obstacle horizontale haut, gauche
-        self.obstacles+=[Obstacle((L/2)+30,30,((L-120)/2)-30,0)] ##Obstacle horizontale haut, droite
-        self.obstacles+=[Obstacle(60,H-30,((L-120)/2)-30,H-30)] ##Obstacle horizontale bas, gauche
-        self.obstacles+=[Obstacle((L/2)+30,H-30,((L-120)/2)-30,H-30)] ##Obstacle horizontale bas, droite
+        self.obstacles+=[Obstacle(0,70,30,H-140)] ##Obstacle verticale gauche
+        self.obstacles+=[Obstacle(L-30,70,30,H-140)] ##Obstacle verticale droite
+        self.obstacles+=[Obstacle(70,30,(L/2)-75-40,0)] ##Obstacle horizontale haut, gauche
+        self.obstacles+=[Obstacle((L/2)+45,30,(L/2)-75-40,0)] ##Obstacle horizontale haut, droite
+        self.obstacles+=[Obstacle(70,H-30,(L/2)-75-40,H-30)] ##Obstacle horizontale bas, gauche
+        self.obstacles+=[Obstacle((L/2)+45,H-30,(L/2)-75-40,H-30)] ##Obstacle horizontale bas, droite
+        ##Borne forme triangulaire
+        self.obstacles+=[Obstacle(0,50,20,20)] ##Borne haut-Obstacle verticale gauche
+        self.obstacles+=[Obstacle(0,H-70,20,20)]##Borne bas-Obstacle verticale gauche
+        self.obstacles+=[Obstacle(L-20,50,20,20)]##Borne haut-Obstacle verticale droite
+        self.obstacles+=[Obstacle(L-20,H-70,20,20)]##Borne bas-Obstacle verticale droite
+        self.obstacles+=[Obstacle(50,0,20,20)]##Borne gauche-Obstacle horizontale haut, gauche
+        self.obstacles+=[Obstacle((L/2)-25,0,20,20)]##Borne droite-Obstacle horizontale haut, gauche
+        self.obstacles+=[Obstacle(L-70,0,20,20)]##Borne droite-Obstacle horizontale haut, droite
+        self.obstacles+=[Obstacle((L/2)+25,0,20,20)]##Borne gauche-Obstacle horizontale haut, droite
+        self.obstacles+=[Obstacle(50,H-20,20,20)]##Borne gauche-Obstacle horizontale bas, gauche
+        self.obstacles+=[Obstacle((L/2)-25,H-20,20,20)]##Borne droite-Obstacle horizontale bas, gauche
+        self.obstacles+=[Obstacle(L-70,H-20,20,20)]##Borne droite-Obstacle horizontale bas, droite
+        self.obstacles+=[Obstacle((L/2)+25,H-20,20,20)]##Borne gauche-Obstacle horizontale bas, droite
         self.troue=[]
         self.troue+=[Cercle(25,25)]
         self.troue+=[Cercle(L/2,25)]
@@ -138,7 +151,7 @@ class Jeu():
 
 ##La def évoluer permet de faire fonctionner les variables
     def evoluer(self):
-        global done,H,L
+        global done,H,L,done2
 
         ##deplace
         self.pj.debout=False
@@ -214,21 +227,21 @@ class Jeu():
                             ##Calcul lorsque les balles bougent
                             if (Vx1!=0 or Vy1!=0) and (Vx2==0 and Vy2==0):
 ##                                 Calcul de la position exact de la balle durant l'impact
-                                if Vx1!=0:
-                                    m=(Vy1/Vx1)
-                                    p=Y-(m*X)
-                                    c=-(((2*RAYON)**2)-(X2**2)-(Y2**2)+(2*p*Y2)-((p)**2))
-                                    a=1+(m**2)
-                                    b=2*((m*(p-Y2))-X2)
-                                    delta=(b**2)-(4*c*a)
-                                    if delta>=0:
-                                        solution1=(((-b-(sqrt(delta))))/(2*a))
-                                        solution2=(((-b+(sqrt(delta))))/(2*a))
-                                        if Vx1<0:
-                                            X=solution2
-                                        if Vx1>0:
-                                            X=solution1
-                                        Y=(m*X)+p
+##                                if Vx1!=0:
+##                                    m=(Vy1/Vx1)
+##                                    p=Y-(m*X)
+##                                    c=-(((2*RAYON)**2)-(X2**2)-(Y2**2)+(2*p*Y2)-((p)**2))
+##                                    a=1+(m**2)
+##                                    b=2*((m*(p-Y2))-X2)
+##                                    delta=(b**2)-(4*c*a)
+##                                    if delta>=0:
+##                                        solution1=(((-b-(sqrt(delta))))/(2*a))
+##                                        solution2=(((-b+(sqrt(delta))))/(2*a))
+##                                        if Vx1<0:
+##                                            X=solution2
+##                                        if Vx1>0:
+##                                            X=solution1
+##                                        Y=(m*X)+p
                                         ##Calcul lorsque une balle bouge
                                 F=Al_Kashi(X,Y,X+Vx1,Y+Vy1,X2,Y2)
                                 VitesseD=sqrt((Vx1**2)+(Vy1**2))
@@ -510,7 +523,9 @@ class Jeu():
                 self.Clic2=False
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
-
+        if self.ba.rayon<=1:
+            done=True
+            done2=True
 
 ##Cette def permet d'afficher à l'écran les objets (boules, bordures, ...)
     def dessiner(self,screen):
@@ -575,17 +590,16 @@ class Jeu():
         if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H))  :
             self.pj=Boule(3*L/4,H/2,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
-        if self.ba.rayon<1 and self.passe:
-            print("Perdu")
-            self.passe=False
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
+
         if self.Clicj1:
             J1 = pygame.image.load("Joueur 1.png").convert_alpha()
             screen.blit(J1, (445,245))
         if self.Clicj2:
             J2 = pygame.image.load("Joueur 2.png").convert_alpha()
             screen.blit(J2, (445,245))
+
 def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
     ##Calcul d'un angle à partir de 3 points
     fA = sqrt((Xa-Xb)**2 + (Ya-Yb)**2)
@@ -611,6 +625,7 @@ pygame.display.set_caption("Jeu de 8")
 
 ##boolean boucle
 done = False
+done2=False
 ##creation du jeu
 jeu=Jeu()
 
@@ -636,4 +651,14 @@ while not done:
     ## --- attente
     clock.tick(60)
 
+
 pygame.quit()
+
+if done2:
+    import tkinter as perdu
+    fenetre = perdu.Tk()
+    photo = perdu.PhotoImage(file='Perdu.png')
+    label = perdu.Label(fenetre, image=photo)
+    label.pack()
+    fenetre.mainloop()
+
