@@ -1,0 +1,16 @@
+from tkinter import *
+import pygame
+
+pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load("Perdu.wav")
+pygame.mixer.music.play()
+
+fen=Tk()
+aire=Canvas(fen,height=768, width=1802)
+mon_image = PhotoImage(file="Perdu.png", master=fen)
+logo= aire.create_image(901,384, image=mon_image)
+aire.image = mon_image
+aire.pack()
+
+fen.mainloop()
