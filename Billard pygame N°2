@@ -1,5 +1,4 @@
 from math import *
-import math
 import pygame
 H=500
 L=1000
@@ -239,10 +238,10 @@ class Jeu():
 ##                                condition=sqrt(((X-X2)**2)+((Y-Y2)**2))
 ##                                angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
 ##                                if X>X2:
-##                                    angle1=math.pi-angle1
+##                                    angle1=pi-angle1
 ##                                if Y>Y2:
 ##                                    angle1=-angle1
-##                                angle2=angle1+math.pi
+##                                angle2=angle1+pi
 ##                                distance_cos1=(abs((2*RAYON)-condition)/2)*cos(angle1)
 ##                                distance_sin1=(abs((2*RAYON)-condition)/2)*sin(angle1)
 ##                                distance_cos2=(abs((2*RAYON)-condition)/2)*cos(angle2)
@@ -254,26 +253,26 @@ class Jeu():
 
                                 angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
                                 if X>X2:
-                                    angle1=math.pi-angle1
+                                    angle1=pi-angle1
                                 if Y>Y2:
                                     angle1=-angle1
-                                while angle1>math.pi:
-                                    angle1=angle1-2*math.pi
-                                while angle1<-math.pi:
-                                    angle1=angle1+2*math.pi
-                                if -math.pi/4<=angle1<math.pi/4:
+                                while angle1>pi:
+                                    angle1=angle1-2*pi
+                                while angle1<-pi:
+                                    angle1=angle1+2*pi
+                                if -pi/4<=angle1<pi/4:
                                     Vx1=-Vx1
                                     Vx2=-Vx2
                                     k=1
-                                if math.pi/4<=angle1<3*math.pi/4:
+                                if pi/4<=angle1<3*pi/4:
                                     Vy1=-Vy1
                                     Vy2=-Vy2
                                     k=2
-                                if -math.pi<=angle1<-3*math.pi/4 or 3*math.pi/4<=angle1<=math.pi:
+                                if -pi<=angle1<-3*pi/4 or 3*pi/4<=angle1<=pi:
                                     Vx1=-Vx1
                                     Vx2=-Vx2
                                     k=1
-                                if -3*math.pi/4<=angle1<-math.pi/4:
+                                if -3*pi/4<=angle1<-pi/4:
                                     Vy1=-Vy1
                                     Vy2=-Vy2
                                     k=2
@@ -337,14 +336,14 @@ class Jeu():
                     if (balle2.vx==0 and balle2.vy==0) and condition<=balle2.rayon+balle.rayon:
                         angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
                         if X>X2:
-                            angle1=math.pi-angle1
+                            angle1=pi-angle1
                         if Y>Y2:
                             angle1=-angle1
                         if Y2<Y:
                             angle1=-angle1
                             if X>X2:
-                                angle1=-math.pi-angle1
-                        angle2=angle1+math.pi
+                                angle1=-pi-angle1
+                        angle2=angle1+pi
                         distance_cos1=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle1)
                         distance_sin1=(((balle2.rayon+balle.rayon+4)-condition)/2)*sin(angle1)
                         distance_cos2=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle2)
@@ -361,8 +360,8 @@ class Jeu():
         Y=self.pj.y
         D1=self.pj.rayon
         D2=400
-        ecart=(1/15)*math.pi
-        ecart2=(1/140)*math.pi
+        ecart=(1/15)*pi
+        ecart2=(1/140)*pi
         self.Tir=True
         for balle in self.Liste:
             if balle.vx!=0 or balle.vy!=0:
@@ -403,9 +402,9 @@ class Jeu():
                         self.y=event.pos[1]
                         x=self.x
                         y=self.y
-                        can_angle=Al_Kashi(X,Y,x,y,x,Y)+math.pi
+                        can_angle=Al_Kashi(X,Y,x,y,x,Y)+pi
                         if x<X:
-                            can_angle=math.pi-can_angle
+                            can_angle=pi-can_angle
                         if y<Y:
                             can_angle=-can_angle
                             ecart=-ecart
@@ -509,7 +508,7 @@ class Jeu():
         ##dessin obstacle
         pygame.draw.rect(screen,GREEN,(20,20,L-40,H-40))
         pygame.draw.line(screen,WHITE,(L*(3/4),20),(L*(3/4),H-20))
-        pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*math.pi),(1/2*math.pi))
+        pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*pi),(1/2*pi))
         def DN(Y):
             X=25
             pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
