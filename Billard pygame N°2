@@ -97,6 +97,7 @@ class Jeu():
         self.bn=Boule(143,267,0,0,0,0)
         self.bo=Boule(110,282,0,0,0,0)
         self.nmax=False
+        self.passe=True
         self.vx=0
         self.vy=0
         self.x_1=0
@@ -554,6 +555,9 @@ class Jeu():
         if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H))  :
             self.pj=Boule(3*L/4,H/2,0,1,0,0)
             self.Liste=[self.pj,self.ba,self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh,self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
+        if self.ba.rayon<1 and self.passe:
+            print("Perdu")
+            self.passe=False
         if self.Tir:
             pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
 def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
