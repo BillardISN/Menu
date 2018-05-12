@@ -523,9 +523,12 @@ class Jeu():
                 self.Clic2=False
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
-        if self.ba.rayon<=1:
-            done=True
-            done2=True
+        for balle in self.Liste:
+            if balle.x!=self.pj.x or balle.y!=self.pj.y:
+                if balle.rayon>1:
+                    if self.ba.rayon<=1:
+                        done=True
+                        done2=True
 
 ##Cette def permet d'afficher à l'écran les objets (boules, bordures, ...)
     def dessiner(self,screen):
