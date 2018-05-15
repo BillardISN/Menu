@@ -523,31 +523,31 @@ class Jeu():
                 self.Clic2=False
                 self.pj.vx=self.vx
                 self.pj.vy=self.vy
-        victoire_rouge=True
-        victoire_jaune=True
+        if not(done):
+            victoire_rouge=True
+            victoire_jaune=True
         equipe_rouge=[self.bb,self.bc,self.bd,self.be,self.bf,self.bg,self.bh]
         equipe_jaune=[self.bi,self.bj,self.bk,self.bl,self.bm,self.bn,self.bo]
-        if not(done):
-            for balle in self.Liste:
-                if (balle.x!=self.pj.x or balle.y!=self.pj.y) and (balle.x!=-100 or balle.y!=-100):
-                    for balle2 in equipe_rouge:
-                        if balle.x==balle2.x or balle.y==balle2.y:
-                            if balle.rayon>1:
-                                victoire_rouge=False
-                                if self.ba.rayon<=1 and self.relais2:
-                                    done2=True
-                                    done=True
-                        elif self.ba.rayon>1:
+        for balle in self.Liste:
+            if (balle.x!=self.pj.x or balle.y!=self.pj.y) and (balle.x!=-100 or balle.y!=-100):
+                for balle2 in equipe_rouge:
+                    if balle.x==balle2.x or balle.y==balle2.y:
+                        if balle.rayon>1:
+                            if self.ba.rayon<=1 and self.relais2:
+                                done2=True
+                                done=True
                             victoire_rouge=False
-                    for balle2 in equipe_jaune:
-                        if balle.x==balle2.x or balle.y==balle2.y:
-                            if balle.rayon>1:
-                                victoire_jaune=False
-                                if self.ba.rayon<=1 and self.relais3:
-                                    done3=True
-                                    done=True
-                        elif self.ba.rayon>1:
+                    elif self.ba.rayon>1:
+                        victoire_rouge=False
+                for balle2 in equipe_jaune:
+                    if balle.x==balle2.x or balle.y==balle2.y:
+                        if balle.rayon>1:
+                            if self.ba.rayon<=1 and self.relais3:
+                                done3=True
+                                done=True
                             victoire_jaune=False
+                    elif self.ba.rayon>1:
+                        victoire_jaune=False
 ##                if balle.rayon>1:
 ##                    victory=False
 ##                    if self.ba.rayon<=1:
