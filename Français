@@ -5,7 +5,547 @@ L=1000
 class Personnage():
 
     def __init__(self,x,y,v,angle,ax,ay):
+        self.x=##Importation des bibliothèques
+from math import *
+import pygame
+
+##définition de la hauteur et de la largeur de la fenetre
+H=500
+L=1000
+
+
+##Définition d'une classe boule qui permet de leur donner les propriétés adéquats
+class Boule():
+
+##On initialise les variables utilisées par la suite
+    def __init__(self,x,y,v,angle,ax,ay):
         self.x=x
+        self.y=y
+        self.angle=angle
+        self.cos=cos(angle)
+        self.sin=sin(angle)
+        self.vx=v*self.cos
+        self.vy=v*self.sin
+        self.ff=0.2
+        self.ax=ax
+        self.ay=ay
+        self.dt=0.1
+        self.rayon=15
+        self.rayontroue=25
+        self.mur=False
+        self.debout=False
+
+##définiton du déplacement des boules
+    def evoluer(self):
+        self.vx=self.vx+self.ax*self.dt
+        self.vy=self.vy+self.ay*self.dt
+        self.v=sqrt(((self.vx)**2)+((self.vy)**2))
+        if self.v!=0:
+            self.kff=(self.v-self.ff)/(self.v)
+        if self.v>1:
+            self.vx=self.kff*self.vx
+            self.vy=self.kff*self.vy
+        else:
+            self.vx=0
+            self.vy=0
+        self.x=self.x+self.vx*self.dt
+        self.y=self.y+self.vy*self.dt
+
+##Test des collisions entre boules et bords (Contact permet de detecter une collision et collision donne le type de collision)
+    def collision(self,obs):
+        haut=(self.y+self.rayon<obs.y)
+        bas=(self.y-self.rayon>obs.y+obs.ly)
+        gauche=(self.x+self.rayon<obs.x)
+        droite=(self.x-self.rayon>obs.x+obs.lx)
+        collision=not(haut or bas or gauche or droite)
+        return collision
+
+    def contact(self,obs):
+        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<self.rayontroue)
+        return contact
+
+##On initialise les bords
+class Obstacle():
+
+    def __init__(self,dx,dy,dx1,dy1):
+        self.x=dx
+        self.y=dy
+        self.lx=dx1
+        self.ly=dy1
+
+
+##La classe Jeu fait évoluer les variables, dessine et permet le mouvement des boules en dessinant au cours du temps
+class Jeu():
+
+##On initialise les variables
+    def __init__(self):
+        self.pj=Boule(750,250,0,1,0,0)
+        self.ba=Boule(175,170,0,0,0,0)
+        self.bb=Boule(175,250,0,0,0,0)
+        self.nmax=False
+        self.passe=True
+        self.vx=0
+        self.vy=0
+        self.x_1=0
+        self.y_1=0
+        self.x_2=0
+        self.y_2=0
+        self.x_3=0
+        self.y_3=0
+        self.x_4=0
+        self.y_4=0
+        self.v=0
+        self.can_angle=0
+        self.n=0
+        self.rayontroue=25
+        self.Clic=False
+        self.Clic2=False
+        self.SansClic=True
+        self.Liste=[self.pj,self.ba,self.bb]
+        self.obstacles=[]
+        self.obstacles+=[Obstacle(0,0,30,H)]
+        self.obstacles+=[Obstacle(0,0,L,30)]
+        self.obstacles+=[Obstacle(0,H-30,L,30)]
+        self.obstacles+=[Obstacle(L-30,0,30,H)]
+
+##La def évoluer permet de faire fonctionner les variables
+    def evoluer(self):
+        global done,H,L,done2,done3,done4,done5
+
+        ##deplace
+        self.pj.debout=False
+        for balle in self.Liste:
+            balle.evoluer()
+
+        ##deplace le pj
+
+        ##test collision
+        collision=False
+        res=[]
+        verification=[0]
+        for balle in self.Liste:
+            for obs in self.obstacles:
+                ff=0.5
+                if (balle.collision(obs)):
+                    if(balle.y<obs.y)and(balle.y+balle.rayon>=obs.y):
+                        ##obstacle en bas
+                        db=abs(balle.y+balle.rayon-obs.y)
+                        balle.y += -db
+                        balle.vy=-ff*balle.vy
+                        ##le personnage est debout
+                        balle.debout=True
+                    else:
+                        if(balle.y>obs.y+obs.ly)and(balle.y-balle.rayon<=obs.y+obs.ly):
+                            ##obstacle en haut
+                            db=abs(balle.y-balle.rayon-(obs.y+obs.ly))
+                            balle.y += db
+                            balle.vy=-ff*balle.vy
+                        else:
+                            if(balle.x<obs.x):
+                                ##obstacle a droite
+                                db=abs(balle.x+balle.rayon-obs.x)
+                                balle.x += -db
+                                balle.vx=-ff*balle.vx
+                            if(balle.x>obs.x+obs.lx):
+                                ##obstacle en gauche
+                                db=abs(balle.x-balle.rayon-(obs.x+obs.lx))
+                                balle.x += db
+                                balle.vx=-ff*balle.vx
+
+            Ok=True
+            if balle.vx!=0 or balle.vy!=0:
+                ##La balle tiré dans balle dois être en mouvement
+                ##Il nous faut avoir une balle au moins en mouvement pour avoir collision
+                for balle2 in self.Liste:
+                    ## La balle tiré dans balle2 n'est pas obligé d'être en mouvement
+                    condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
+                    if balle.x!=balle2.x or balle.y!=balle2.y:
+                        for verifier in range(len(verification)):
+                            ##On vérifie si la condition a existé auparavant
+                            if condition==verification[verifier]:
+                                Ok=False
+                        conditioncolision=(condition<=balle.rayon+balle2.rayon)
+                        ##Calcul des variables si il y a collision
+                        if conditioncolision and Ok:
+                            X=balle.x
+                            Y=balle.y
+                            X2=balle2.x
+                            Y2=balle2.y
+                            Vx1=balle.vx
+                            Vy1=balle.vy
+                            Vx2=balle2.vx
+                            Vy2=balle2.vy
+                            RAYON=balle.rayon
+                            ##Calcul lorsque les balles bougent
+                            if (Vx1!=0 or Vy1!=0) and (Vx2==0 and Vy2==0):
+##                                 Calcul de la position exact de la balle durant l'impact
+                                if Vx1!=0:
+                                    m=(Vy1/Vx1)
+                                    p=Y-(m*X)
+                                    c=-(((2*RAYON)**2)-(X2**2)-(Y2**2)+(2*p*Y2)-((p)**2))
+                                    a=1+(m**2)
+                                    b=2*((m*(p-Y2))-X2)
+                                    delta=(b**2)-(4*c*a)
+                                    if delta>=0:
+                                        solution1=(((-b-(sqrt(delta))))/(2*a))
+                                        solution2=(((-b+(sqrt(delta))))/(2*a))
+                                        if Vx1<0:
+                                            X=solution2
+                                        if Vx1>0:
+                                            X=solution1
+                                        Y=(m*X)+p
+                                        ##Calcul lorsque une balle bouge
+                                F=Al_Kashi(X,Y,X+Vx1,Y+Vy1,X2,Y2)
+                                VitesseD=sqrt((Vx1**2)+(Vy1**2))
+                                angleV2=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                                Vx2=VitesseD*cos(F)*cos(angleV2)
+                                Vy2=VitesseD*cos(F)*sin(angleV2)
+                                if X2<X and Vx2>0:
+                                    Vx2=-Vx2
+                                if Y2<Y and Vy2>0:
+                                    Vy2=-Vy2
+                                Vx1=(Vx1-Vx2)
+                                Vy1=(Vy1-Vy2)
+                            else:
+
+                                angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                                if X>X2:
+                                    angle1=pi-angle1
+                                if Y>Y2:
+                                    angle1=-angle1
+                                while angle1>pi:
+                                    angle1=angle1-2*pi
+                                while angle1<-pi:
+                                    angle1=angle1+2*pi
+                                if -pi/4<=angle1<pi/4:
+                                    Vx1=-Vx1
+                                    Vx2=-Vx2
+                                    k=1
+                                if pi/4<=angle1<3*pi/4:
+                                    Vy1=-Vy1
+                                    Vy2=-Vy2
+                                    k=2
+                                if -pi<=angle1<-3*pi/4 or 3*pi/4<=angle1<=pi:
+                                    Vx1=-Vx1
+                                    Vx2=-Vx2
+                                    k=1
+                                if -3*pi/4<=angle1<-pi/4:
+                                    Vy1=-Vy1
+                                    Vy2=-Vy2
+                                    k=2
+                                V1=sqrt(((Vx1)**2)+((Vy1)**2))
+                                V2=sqrt(((Vx2)**2)+((Vy2)**2))
+                                if k==1:
+                                    if X>X2:
+                                        if Vx1<0:
+                                            Vx1=-Vx1
+                                        if Vx2>0:
+                                            Vx2=-Vx2
+                                    else:
+                                        if Vx1>0:
+                                            Vx1=-Vx1
+                                        if Vx2<0:
+                                            Vx2=-Vx2
+                                if k==2:
+                                    if Y>Y2:
+                                        if Vy1<0:
+                                            Vy1=-Vy1
+                                        if Vy2>0:
+                                            Vy2=-Vy2
+                                    else:
+                                        if Vy1>0:
+                                            Vy1=-Vy1
+                                        if Vy2<0:
+                                            Vy2=-Vy2
+
+                                if V1>V2:
+                                    Vx1=0.7*Vx1
+                                    Vy1=0.7*Vy1
+                                    Vx2=1.1*Vx2
+                                    Vy2=1.1*Vy2
+                                else:
+                                    Vx2=0.7*Vx2
+                                    Vy2=0.7*Vy2
+                                    Vx1=1.1*Vx1
+                                    Vy1=1.1*Vy1
+
+##                                X=X+Vx1*0.1
+##                                Y=Y+Vy1*0.1
+##                                X2=X2+Vx2*0.1
+##                                Y2=Y2+Vy2*0.1
+                            balle.x=X
+                            balle.y=Y
+                            balle2.x=X2
+                            balle2.y=Y2
+                            balle.vx=Vx1
+                            balle.vy=Vy1
+                            balle2.vx=Vx2
+                            balle2.vy=Vy2
+                            condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
+                            verification+=[condition]
+            else:
+                for balle2 in self.Liste:
+                    X=balle.x
+                    Y=balle.y
+                    X2=balle2.x
+                    Y2=balle2.y
+                    condition=sqrt(((balle.x-balle2.x)**2)+((balle.y-balle2.y)**2))
+                    if (balle2.vx==0 and balle2.vy==0) and condition<=balle2.rayon+balle.rayon:
+                        angle1=Al_Kashi(X,Y,X2,Y2,X2,Y)
+                        if X>X2:
+                            angle1=pi-angle1
+                        if Y>Y2:
+                            angle1=-angle1
+                        if Y2<Y:
+                            angle1=-angle1
+                            if X>X2:
+                                angle1=-pi-angle1
+                        angle2=angle1+pi
+                        distance_cos1=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle1)
+                        distance_sin1=(((balle2.rayon+balle.rayon+4)-condition)/2)*sin(angle1)
+                        distance_cos2=(((balle2.rayon+balle.rayon+4)-condition)/2)*cos(angle2)
+                        distance_sin2=(((balle2.rayon+balle.rayon+4)-condition)/2)*sin(angle2)
+                        balle.x=balle.x-distance_cos1
+                        balle.y=balle.y-distance_sin1
+                        balle2.x=balle2.x-distance_cos2
+                        balle2.y=balle2.y-distance_sin2
+
+
+        ## "Tir" permet de vérifier que toute les balles sont immobiles
+
+        X=self.pj.x
+        Y=self.pj.y
+        D1=self.pj.rayon
+        D2=400
+        ecart=(1/15)*pi
+        ecart2=(1/140)*pi
+        self.Tir=True
+        for balle in self.Liste:
+            if balle.vx!=0 or balle.vy!=0:
+                self.Tir=False
+                self.n=0
+                self.Clic=False
+                self.Clic2=False
+                self.SansClic=True
+                self.v=0
+                self.relais=True
+                self.nmax=False
+                self.x_1=X+D1*cos(ecart)
+                self.y_1=Y+D1*sin(ecart)
+                self.x_2=X+D1*cos(-ecart)
+                self.y_2=Y+D1*sin(-ecart)
+                self.x_3=X+D2*cos(-ecart2)
+                self.y_3=Y+D2*sin(-ecart2)
+                self.x_4=X+D2*cos(ecart2)
+                self.y_4=Y+D2*sin(ecart2)
+                self.can_angle=0
+        v_can=2
+        v_can2=25
+
+        ## --- gestion des evenements
+        for event in pygame.event.get():
+            ##joueur quitte
+            if event.type == pygame.QUIT:
+                done = True
+
+            if self.Tir:
+                if self.SansClic:
+                    if event.type == pygame.MOUSEMOTION and event.buttons[0] != 1:
+                        self.x=event.pos[0]
+                        self.y=event.pos[1]
+                        x=self.x
+                        y=self.y
+                        can_angle=Al_Kashi(X,Y,x,y,x,Y)+pi
+                        if x<X:
+                            can_angle=pi-can_angle
+                        if y<Y:
+                            can_angle=-can_angle
+                            ecart=-ecart
+                        can_angle_1=can_angle-ecart
+                        can_angle_2=can_angle+ecart
+                        can_angle_3=can_angle-ecart2
+                        can_angle_4=can_angle+ecart2
+                        self.can_angle=can_angle
+                        self.x_1=X+D1*cos(can_angle_1)
+                        self.y_1=Y+D1*sin(can_angle_1)
+                        self.x_2=X+D1*cos(can_angle_2)
+                        self.y_2=Y+D1*sin(can_angle_2)
+                        self.x_3=X+D2*cos(can_angle_3)
+                        self.y_3=Y+D2*sin(can_angle_3)
+                        self.x_4=X+D2*cos(can_angle_4)
+                        self.y_4=Y+D2*sin(can_angle_4)
+                        if y>=Y:
+                            x1=self.x_1
+                            y1=self.y_1
+                            self.x_1=self.x_2
+                            self.y_1=self.y_2
+                            self.x_2=x1
+                            self.y_2=y1
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    self.Clic=True
+                    self.SansClic=False
+
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                        v=self.v
+                        self.vx=-v*cos(self.can_angle)
+                        self.vy=-v*sin(self.can_angle)
+                        self.Clic2=True
+                        self.Clic=False
+        if self.Clic:
+            if not(self.nmax):
+                if self.n<=150:
+                    self.x_1+=v_can*cos(self.can_angle)
+                    self.y_1+=v_can*sin(self.can_angle)
+                    self.x_2+=v_can*cos(self.can_angle)
+                    self.y_2+=v_can*sin(self.can_angle)
+                    self.x_3+=v_can*cos(self.can_angle)
+                    self.y_3+=v_can*sin(self.can_angle)
+                    self.x_4+=v_can*cos(self.can_angle)
+                    self.y_4+=v_can*sin(self.can_angle)
+                    self.v+=1.5
+                    self.n+=v_can
+                else:
+                    self.nmax=True
+            else:
+                if self.n>0:
+                    self.x_1+=-v_can*cos(self.can_angle)
+                    self.y_1+=-v_can*sin(self.can_angle)
+                    self.x_2+=-v_can*cos(self.can_angle)
+                    self.y_2+=-v_can*sin(self.can_angle)
+                    self.x_3+=-v_can*cos(self.can_angle)
+                    self.y_3+=-v_can*sin(self.can_angle)
+                    self.x_4+=-v_can*cos(self.can_angle)
+                    self.y_4+=-v_can*sin(self.can_angle)
+                    self.v+=-1.5
+                    self.n+=-v_can
+                else:
+                    self.nmax=False
+
+
+        if self.Clic2:
+            if self.n>0:
+                self.x_1+=-v_can2*cos(self.can_angle)
+                self.y_1+=-v_can2*sin(self.can_angle)
+                self.x_2+=-v_can2*cos(self.can_angle)
+                self.y_2+=-v_can2*sin(self.can_angle)
+                self.x_3+=-v_can2*cos(self.can_angle)
+                self.y_3+=-v_can2*sin(self.can_angle)
+                self.x_4+=-v_can2*cos(self.can_angle)
+                self.y_4+=-v_can2*sin(self.can_angle)
+                self.n+=-v_can2
+            else:
+                self.Clic2=False
+                self.pj.vx=self.vx
+                self.pj.vy=self.vy
+
+##                if balle.rayon>1:
+##                    victory=False
+##                    if self.ba.rayon<=1:
+##                        done=True
+##                        done2=True
+
+##Cette def permet d'afficher à l'écran les objets (boules, bordures, ...)
+    def dessiner(self,screen):
+        WHITE = (0xFF, 0xFF, 0xFF)
+        RED = (0xFD, 0x01, 0x01)
+        BLUE = (0x00, 0x00, 0xFF)
+        BLACK = (0x00, 0x00, 0x00)
+        GREEN = (0x3A, 0x9D, 0x23)
+        GREENH = (0x1B, 0x4F, 0x08)
+        BRUNFoncé=(0x5B,0x3C,0x11)
+        BRUN = (0x74, 0x35, 0x03)
+        YELLOW = (0xFE, 0xFE,0x01)
+
+        listecouleur=[WHITE,BLACK]
+        for i in range (7):
+            listecouleur+=[RED]
+        for i in range (7):
+            listecouleur+=[YELLOW]
+        screen.fill(BRUN)
+
+        ##dessin obstacle
+        pygame.draw.rect(screen,GREENH,(20,20,L-40,H-40))
+        pygame.draw.rect(screen,GREEN,(30,30,L-60,H-60))
+        pygame.draw.line(screen,WHITE,(L*(3/4),30),(L*(3/4),H-31))
+        pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*pi),(1/2*pi))
+
+
+        ##dessin personnage
+        collision=False
+        res=[]
+        for obs in self.obstacles:
+            res=self.pj.collision(obs)
+            if (res):
+                collision=True
+        compteur=0
+        for balle in self.Liste:
+            rayon=balle.rayon
+            if rayon>1:
+                pygame.draw.circle(screen,listecouleur[compteur],(int(balle.x),int(balle.y)),rayon)
+            else:
+                balle.vx=0
+                balle.vy=0
+            compteur+=1
+        if (self.pj.rayon<1 and self.Tir==True) or (not(0<self.pj.x<L) or not(0<self.pj.y<H)):
+            self.pj=Boule(750,250,0,1,0,0)
+            self.Liste=[self.pj,self.ba,self.bb]
+        if self.Tir:
+            pygame.draw.polygon(screen,BRUNFoncé,((self.x_1,self.y_1),(self.x_2,self.y_2),(self.x_3,self.y_3),(self.x_4,self.y_4)))
+
+
+def Al_Kashi(Xa,Ya,Xb,Yb,Xc,Yc):
+    ##Calcul d'un angle à partir de 3 points
+    fA = sqrt((Xa-Xb)**2 + (Ya-Yb)**2)
+    fB = sqrt((Xa-Xc)**2 + (Ya-Yc)**2)
+    fC = sqrt((Xb-Xc)**2 + (Yb-Yc)**2)
+    if fA==0:
+        fA=1/100
+    if fB==0:
+        fB=1/100
+    E=((fA**2) + (fB**2) - (fC**2)) / (2*fA*fB)
+    if E>1:
+        E=1
+    elif E<-1:
+        E=-1
+    QS=acos(E)
+    return QS
+
+size = (L,H)
+screen = pygame.display.set_mode(size)
+
+pygame.display.set_caption("Jeu de 8")
+
+
+##boolean boucle
+done = False
+##creation du jeu
+jeu=Jeu()
+pygame.init()
+##Musique en jeu
+music = pygame.mixer.music.load("BirdBrainz_II.wav")
+pygame.mixer.music.play()
+
+##gestion horloge
+clock = pygame.time.Clock()
+## -------- boucle principale
+while not done:
+
+
+
+    ## --- evolution du jeu
+    jeu.evoluer()
+
+    ## --- affichage
+    jeu.dessiner(screen)
+
+    ## --- mise a jour graphique
+    pygame.display.flip()
+    ## --- attente
+    clock.tick(60)
+
+
+pygame.quit()
+
         self.y=y
         self.cos=cos(angle)
         self.sin=sin(angle)
