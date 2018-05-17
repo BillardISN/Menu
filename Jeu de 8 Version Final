@@ -24,7 +24,7 @@ class Boule():
         self.ay=ay
         self.dt=0.1
         self.rayon=15
-        self.rayontroue=25
+        self.rayontrou=25
         self.mur=False
         self.debout=False
 
@@ -54,7 +54,7 @@ class Boule():
         return collision
 
     def contact(self,obs):
-        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<self.rayontroue)
+        contact=not((sqrt((obs.x-self.x)**2+((obs.y-self.y)**2)))<self.rayontrou)
         return contact
 
 ##On initialise les bords
@@ -116,7 +116,7 @@ class Jeu():
         self.v=0
         self.can_angle=0
         self.n=0
-        self.rayontroue=25
+        self.rayontrou=25
         self.Clic=False
         self.Clic2=False
         self.SansClic=True
@@ -141,13 +141,13 @@ class Jeu():
         self.obstacles+=[Obstacle((L/2)-25,H-20,20,20)]##Borne droite-Obstacle horizontale bas, gauche
         self.obstacles+=[Obstacle(L-70,H-20,20,20)]##Borne droite-Obstacle horizontale bas, droite
         self.obstacles+=[Obstacle((L/2)+25,H-20,20,20)]##Borne gauche-Obstacle horizontale bas, droite
-        self.troue=[]
-        self.troue+=[Cercle(25,25)]
-        self.troue+=[Cercle(L/2,25)]
-        self.troue+=[Cercle(975,25)]
-        self.troue+=[Cercle(25,475)]
-        self.troue+=[Cercle(L/2,475)]
-        self.troue+=[Cercle(975,475)]
+        self.trou=[]
+        self.trou+=[Cercle(25,25)]
+        self.trou+=[Cercle(L/2,25)]
+        self.trou+=[Cercle(975,25)]
+        self.trou+=[Cercle(25,475)]
+        self.trou+=[Cercle(L/2,475)]
+        self.trou+=[Cercle(975,475)]
 
 ##La def évoluer permet de faire fonctionner les variables
     def evoluer(self):
@@ -195,7 +195,7 @@ class Jeu():
 
             ##détection de la collision
 
-            for obs in self.troue:
+            for obs in self.trou:
                 if (balle.contact(obs))==False:
                     balle.x=obs.x
                     balle.y=obs.y
@@ -397,8 +397,8 @@ class Jeu():
                 self.v=0
                 self.relais=True
                 self.nmax=False
-                for obs in self.troue:
-                    if sqrt((obs.x-self.pj.x)**2+((obs.y-self.pj.y)**2))<=self.rayontroue:
+                for obs in self.trou:
+                    if sqrt((obs.x-self.pj.x)**2+((obs.y-self.pj.y)**2))<=self.rayontrou:
                         X=3*L/4
                         Y=H/2
                         D1=15
@@ -585,11 +585,11 @@ class Jeu():
         pygame.draw.arc(screen,WHITE,(L*(3/4)-100,(H/2)-100,200,200),(-1/2*pi),(1/2*pi))
         def DN(Y):
             X=25
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontrou)
             X=975
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontrou)
             X=L/2
-            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontroue)
+            pygame.draw.circle(screen,BLACK,(int(X),int(Y)),self.rayontrou)
         def Bord(D,X1,X2):
             pygame.draw.polygon(screen,GREENH,((X1,D),(X2,D+20),(X2,H-D-20),(X1,H-D)))
         def Bord2(D,X1,X2):
