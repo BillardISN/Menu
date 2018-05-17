@@ -716,7 +716,7 @@ if done5 or done4:
     music.play()
     import tkinter as victoire
     fenetre = victoire.Tk()
-    photo = victoire.PhotoImage(file='Perdu.png')
+    photo = victoire.PhotoImage(file='GG.png')
     label = victoire.Label(fenetre, image=photo)
     label.pack()
     fenetre.mainloop()
